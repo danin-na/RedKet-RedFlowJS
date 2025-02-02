@@ -33,4 +33,42 @@ class RF
             'color:#888;font-size:11px;'
         )
     }
+
+    static #loadScript (u)
+    {
+        // Return the cached promise if already loaded.
+        if (RF.#CACHE_SCRIPT[u]) {
+            return RF.#CACHE_SCRIPT[u]
+        }
+        // If the script is already in the DOM, resolve immediately.
+        if (document.querySelector(`script[src="${u}"]`)) {
+            RF.#CACHE_SCRIPT[u] = Promise.resolve()
+            return RF.#CACHE_SCRIPT[u]
+        }
+        // Add a preload link hint if not already added.
+        if (!document.querySelector(`link[rel="preload"][href="${u}"]`)) {
+            const link = document.createElement('link')
+            link.rel = 'preload'
+            link.href = u
+            link.as = 'script'
+            document.head.appendChild(link)
+        }
+        // Load the script and cache the promise.
+        return (RF.#CACHE_SCRIPT[u] = new Promise((resolve, reject) =>
+        {
+            const script = document.createElement('script')
+            script.src = u
+            script.async = true
+            script.onload = () =>
+            {
+                resolve()
+            }
+            script.onerror = () =>
+            {
+                RF.#log_error('loadScript', `Failed to load script: ${u}`)
+                reject(new Error(`Failed to load script: ${u}`))
+            }
+            document.body.appendChild(script)
+        }))
+    }
 }
