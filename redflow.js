@@ -1,6 +1,12 @@
 class RF
 {
 
+    static #CACHE_CREDIT = false
+    static #CACHE_SCRIPT = {}
+
+    static #cdn_gsap = 'https://cdnjs.cloudflare.com/ajax/libs/gsap/3.6.1/gsap.min.js'
+    static #cdn_jquary = 'https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js'
+
     static #log_error (n, m)
     {
         console.error(` 💢 ERROR → ⭕ RedFlow → ${n} → ${m}`)
