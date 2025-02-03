@@ -77,4 +77,15 @@ class RF
             document.body.appendChild(script)
         }))
     }
+
+    async #createComponent (u, c, n, config = null)
+    {
+        try {
+            await Promise.all(u.map((url) => RF.#loadScript(url)))
+            return config ? new c(config) : new c()
+        } catch (e) {
+            RF.#log_error(n, e.message)
+            return null
+        }
+    }
 }
