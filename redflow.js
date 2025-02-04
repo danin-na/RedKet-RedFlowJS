@@ -88,4 +88,14 @@ class RF
             return null
         }
     }
+
+    Component = {
+        Marquee01: {
+            create: (config) => this.#createComponent([RF.#cdn_gsap], RF.#components.Marquee01, 'Marquee 01', config),
+        },
+        create: {
+            Icon01: (config) => this.#createComponent([], RF.#components.Icon01, 'Icon 01', config),
+            Slider01: (config) => this.#createComponent([RF.#cdn_gsap], RF.#components.Slider01, 'Slider 01', config),
+        },
+    }
 }
