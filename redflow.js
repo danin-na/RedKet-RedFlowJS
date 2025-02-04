@@ -98,4 +98,13 @@ class RF
             Slider01: (config) => this.#createComponent([RF.#cdn_gsap], RF.#components.Slider01, 'Slider 01', config),
         },
     }
+
+    constructor()
+    {
+        if (!RF.#CACHE_CREDIT) {
+            RF.#log_credit()
+            RF.#CACHE_CREDIT = true
+        }
+        RF.#log_success('Constructor', 'instance initialized.')
+    }
 }
