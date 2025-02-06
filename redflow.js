@@ -1,5 +1,10 @@
 class RF
 {
+    static #components = {
+        Icon01: Icon01,
+        Slider01: Slider01,
+        Marquee01: Marquee01,
+    }
 
     static #CACHE_CREDIT = false
     static #CACHE_SCRIPT = {}
@@ -16,10 +21,8 @@ class RF
     {
         console.log(` ✅ SUCCESS → ⭕ RedFlow → ${n} → ${m}`)
     }
-
     static #log_credit ()
     {
-
         document.body.insertAdjacentHTML(
             'afterbegin',
             `<!-- ⭕ RedFlow - Official Webflow Library by RedKet -- Copyright © 2025 RedKet. All rights reserved. -->
