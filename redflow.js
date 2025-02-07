@@ -29,6 +29,89 @@ class Icon01
     }
 }
 
+class Slider01
+{
+    #e
+
+    constructor(c = {})
+    {
+        this.#e = {
+            tag: {
+                self: c.tag.self,
+                mask: c.tag.mask,
+                next: c.tag.next,
+                prev: c.tag.prev,
+                slides: c.tag.slides,
+            },
+            set: {
+                ease: c.set.ease || 'none',
+                duration: parseFloat(c.set.duration) || 0.5,
+            },
+            prog: {
+                delay: 100,
+                id: null,
+                anim: null,
+                currentSlide: 0,
+                totalSlides: c.tag.slides.length,
+                offsets: [],
+            },
+        }
+
+        this.#run()
+
+        this.#e.tag.next.addEventListener('click', () =>
+        {
+            this.#e.prog.currentSlide =
+                this.#e.prog.currentSlide < this.#e.prog.totalSlides - 1 ? this.#e.prog.currentSlide + 1 : 0
+            gsap.to(this.#e.tag.mask, {
+                duration: this.#e.set.duration,
+                ease: this.#e.set.ease,
+                x: -this.#e.prog.offsets[this.#e.prog.currentSlide],
+            })
+        })
+
+        this.#e.tag.prev.addEventListener('click', () =>
+        {
+            this.#e.prog.currentSlide =
+                this.#e.prog.currentSlide > 0 ? this.#e.prog.currentSlide - 1 : this.#e.prog.totalSlides - 1
+            gsap.to(this.#e.tag.mask, {
+                duration: this.#e.set.duration,
+                ease: this.#e.set.ease,
+                x: -this.#e.prog.offsets[this.#e.prog.currentSlide],
+            })
+        })
+
+        window.addEventListener('resize', () =>
+        {
+            clearTimeout(this.#e.prog.id)
+            this.#e.prog.id = setTimeout(() => this.#run(), this.#e.prog.delay)
+        })
+    }
+
+    #reset (animation)
+    {
+        if (!animation) return 0
+        const savedProgress = animation.progress()
+        animation.progress(0).kill()
+        return savedProgress
+    }
+
+    #run ()
+    {
+        const prog = this.#reset(this.#e.prog.anim)
+        this.#e.prog.offsets = []
+        this.#e.tag.slides.forEach((slide) =>
+        {
+            this.#e.prog.offsets.push(slide.offsetLeft)
+        })
+        this.#e.prog.totalSlides = this.#e.tag.slides.length
+        this.#e.prog.anim = gsap.set(this.#e.tag.mask, {
+            x: -this.#e.prog.offsets[this.#e.prog.currentSlide],
+        })
+        this.#e.prog.anim.progress(prog)
+    }
+}
+
 class RF
 {
     static #components = {
