@@ -1,3 +1,34 @@
+class Icon01
+{
+    #e
+
+    constructor(c = {})
+    {
+        this.#e = {
+            tag: {
+                self: c.tag.self,
+            },
+            set: {
+                svgPath: c.set.svgPath,
+            },
+        }
+        this.#render()
+    }
+
+    #render ()
+    {
+        if (this.#e.set.svgPath) {
+            const decodedSvg = decodeURIComponent(this.#e.set.svgPath)
+            this.#e.tag.self.innerHTML = decodedSvg
+        }
+    }
+
+    static initAll ()
+    {
+        document.querySelectorAll('[data-svg]').forEach((el) => new Icon01(el))
+    }
+}
+
 class RF
 {
     static #components = {
