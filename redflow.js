@@ -25,7 +25,7 @@ class Icon01
 
     static initAll ()
     {
-        document.querySelectorAll('[data-svg]').forEach((el) => new Icon01(el))
+        document.querySelectorAll("[data-svg]").forEach((el) => new Icon01(el))
     }
 }
 
@@ -41,8 +41,8 @@ class Marquee01
                 item: c.tag.item,
             },
             set: {
-                ease: c.set.ease || 'none',
-                direction: c.set.direction || 'left',
+                ease: c.set.ease || "none",
+                direction: c.set.direction || "left",
                 duration: parseFloat(c.set.duration) || 30,
             },
             prog: {
@@ -53,13 +53,16 @@ class Marquee01
             },
         }
 
-        this.#e.tag.item.setAttribute('data-ff', '')
+        this.#e.tag.item.setAttribute("data-ff", "")
         this.#e.tag.self.append(this.#e.tag.item.cloneNode(true))
         this.#render()
-        window.addEventListener('resize', () =>
+        window.addEventListener("resize", () =>
         {
             clearTimeout(this.#e.prog.id)
-            this.#e.prog.id = setTimeout(() => this.#render(), this.#e.prog.delay)
+            this.#e.prog.id = setTimeout(
+                () => this.#render(),
+                this.#e.prog.delay
+            )
         })
     }
 
@@ -74,9 +77,10 @@ class Marquee01
     #render ()
     {
         const prog = this.#reset(this.#e.prog.anim)
-        const items = this.#e.tag.self.querySelectorAll('[data-ff]')
+        const items = this.#e.tag.self.querySelectorAll("[data-ff]")
         const width = parseInt(getComputedStyle(items[0]).width, 10)
-        const [xFrom, xTo] = this.#e.set.direction === 'left' ? [0, -width] : [-width, 0]
+        const [xFrom, xTo] =
+            this.#e.set.direction === "left" ? [0, -width] : [-width, 0]
 
         this.#e.prog.anim = gsap.fromTo(
             items,
@@ -107,7 +111,7 @@ class Slider01
                 slides: c.tag.slides,
             },
             set: {
-                ease: c.set.ease || 'none',
+                ease: c.set.ease || "none",
                 duration: parseFloat(c.set.duration) || 0.5,
             },
             prog: {
@@ -122,10 +126,12 @@ class Slider01
 
         this.#run()
 
-        this.#e.tag.next.addEventListener('click', () =>
+        this.#e.tag.next.addEventListener("click", () =>
         {
             this.#e.prog.currentSlide =
-                this.#e.prog.currentSlide < this.#e.prog.totalSlides - 1 ? this.#e.prog.currentSlide + 1 : 0
+                this.#e.prog.currentSlide < this.#e.prog.totalSlides - 1
+                    ? this.#e.prog.currentSlide + 1
+                    : 0
             gsap.to(this.#e.tag.mask, {
                 duration: this.#e.set.duration,
                 ease: this.#e.set.ease,
@@ -133,10 +139,12 @@ class Slider01
             })
         })
 
-        this.#e.tag.prev.addEventListener('click', () =>
+        this.#e.tag.prev.addEventListener("click", () =>
         {
             this.#e.prog.currentSlide =
-                this.#e.prog.currentSlide > 0 ? this.#e.prog.currentSlide - 1 : this.#e.prog.totalSlides - 1
+                this.#e.prog.currentSlide > 0
+                    ? this.#e.prog.currentSlide - 1
+                    : this.#e.prog.totalSlides - 1
             gsap.to(this.#e.tag.mask, {
                 duration: this.#e.set.duration,
                 ease: this.#e.set.ease,
@@ -144,7 +152,7 @@ class Slider01
             })
         })
 
-        window.addEventListener('resize', () =>
+        window.addEventListener("resize", () =>
         {
             clearTimeout(this.#e.prog.id)
             this.#e.prog.id = setTimeout(() => this.#run(), this.#e.prog.delay)
@@ -186,8 +194,10 @@ class RF
     static #CACHE_CREDIT = false
     static #CACHE_SCRIPT = {}
 
-    static #cdn_gsap = 'https://cdnjs.cloudflare.com/ajax/libs/gsap/3.6.1/gsap.min.js'
-    static #cdn_jquary = 'https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js'
+    static #cdn_gsap =
+        "https://cdnjs.cloudflare.com/ajax/libs/gsap/3.6.1/gsap.min.js"
+    static #cdn_jquary =
+        "https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"
 
     static #log_error (n, m)
     {
@@ -201,22 +211,22 @@ class RF
     static #log_credit ()
     {
         document.body.insertAdjacentHTML(
-            'afterbegin',
+            "afterbegin",
             `<!-- ⭕ RedFlow - Official Webflow Library by RedKet -- Copyright © 2025 RedKet. All rights reserved. -->
              <!-- Unauthorized copying, modification, or distribution is prohibited. -- Visit: www.RedKet.com | www.Red.Ket -->`
         )
         document.body.insertAdjacentHTML(
-            'beforeend',
+            "beforeend",
             `<!-- ⭕ RedFlow | OFFICIAL WEBFLOW LIBRARY BY REDKET © 2025 REDKET | WWW.REDKET.COM | WWW.RED.KET -->`
         )
         console.log(
-            '%cRed%cFlow%c- official Webflow Library by %cRed%cKet%c\nCopyright Â© 2025 RedKet. All rights reserved.\nUnauthorized copying, modification, or distribution is prohibited.\nVisit: www.RedKet.com | www.Red.Ket',
-            'color:#c33;background:#000;font-weight:bold;padding:2px 4px;border-radius:3px;',
-            'color:#dfdfdf;background:#000;font-weight:bold;padding:2px 4px;border-radius:3px;',
-            'color:#aaa;background:#000;padding:2px 4px;border-radius:3px;',
-            'color:#c33;background:#000;font-weight:bold;padding:2px 4px;border-radius:3px;',
-            'color:#dfdfdf;background:#000;font-weight:bold;padding:2px 4px;border-radius:3px;',
-            'color:#888;font-size:11px;'
+            "%cRed%cFlow%c- official Webflow Library by %cRed%cKet%c\nCopyright Â© 2025 RedKet. All rights reserved.\nUnauthorized copying, modification, or distribution is prohibited.\nVisit: www.RedKet.com | www.Red.Ket",
+            "color:#c33;background:#000;font-weight:bold;padding:2px 4px;border-radius:3px;",
+            "color:#dfdfdf;background:#000;font-weight:bold;padding:2px 4px;border-radius:3px;",
+            "color:#aaa;background:#000;padding:2px 4px;border-radius:3px;",
+            "color:#c33;background:#000;font-weight:bold;padding:2px 4px;border-radius:3px;",
+            "color:#dfdfdf;background:#000;font-weight:bold;padding:2px 4px;border-radius:3px;",
+            "color:#888;font-size:11px;"
         )
     }
 
@@ -233,16 +243,16 @@ class RF
         }
         // Add a preload link hint if not already added.
         if (!document.querySelector(`link[rel="preload"][href="${u}"]`)) {
-            const link = document.createElement('link')
-            link.rel = 'preload'
+            const link = document.createElement("link")
+            link.rel = "preload"
             link.href = u
-            link.as = 'script'
+            link.as = "script"
             document.head.appendChild(link)
         }
         // Load the script and cache the promise.
         return (RF.#CACHE_SCRIPT[u] = new Promise((resolve, reject) =>
         {
-            const script = document.createElement('script')
+            const script = document.createElement("script")
             script.src = u
             script.async = true
             script.onload = () =>
@@ -251,7 +261,7 @@ class RF
             }
             script.onerror = () =>
             {
-                RF.#log_error('loadScript', `Failed to load script: ${u}`)
+                RF.#log_error("loadScript", `Failed to load script: ${u}`)
                 reject(new Error(`Failed to load script: ${u}`))
             }
             document.body.appendChild(script)
@@ -271,11 +281,29 @@ class RF
 
     Component = {
         Marquee01: {
-            create: (config) => this.#createComponent([RF.#cdn_gsap], RF.#components.Marquee01, 'Marquee 01', config),
+            create: (config) =>
+                this.#createComponent(
+                    [RF.#cdn_gsap],
+                    RF.#components.Marquee01,
+                    "Marquee 01",
+                    config
+                ),
         },
         create: {
-            Icon01: (config) => this.#createComponent([], RF.#components.Icon01, 'Icon 01', config),
-            Slider01: (config) => this.#createComponent([RF.#cdn_gsap], RF.#components.Slider01, 'Slider 01', config),
+            Icon01: (config) =>
+                this.#createComponent(
+                    [],
+                    RF.#components.Icon01,
+                    "Icon 01",
+                    config
+                ),
+            Slider01: (config) =>
+                this.#createComponent(
+                    [RF.#cdn_gsap],
+                    RF.#components.Slider01,
+                    "Slider 01",
+                    config
+                ),
         },
     }
 
@@ -285,11 +313,11 @@ class RF
             RF.#log_credit()
             RF.#CACHE_CREDIT = true
         }
-        RF.#log_success('Constructor', 'instance initialized.')
+        RF.#log_success("Constructor", "instance initialized.")
     }
 }
 
-document.addEventListener('DOMContentLoaded', () =>
+document.addEventListener("DOMContentLoaded", () =>
 {
     //onst RedFlow = new RF()
 
