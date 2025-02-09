@@ -29,6 +29,71 @@ class Icon01
     }
 }
 
+
+class Marquee01
+{
+    #e
+
+    constructor(c = {})
+    {
+        this.#e = {
+            tag: {
+                self: c.tag.self,
+                item: c.tag.item,
+            },
+            set: {
+                ease: c.set.ease || 'none',
+                direction: c.set.direction || 'left',
+                duration: parseFloat(c.set.duration) || 30,
+            },
+            prog: {
+                self: 0,
+                id: null,
+                anim: null,
+                delay: 200,
+            },
+        }
+
+        this.#e.tag.item.setAttribute('data-ff', '')
+        this.#e.tag.self.append(this.#e.tag.item.cloneNode(true))
+        this.#render()
+        window.addEventListener('resize', () =>
+        {
+            clearTimeout(this.#e.prog.id)
+            this.#e.prog.id = setTimeout(() => this.#render(), this.#e.prog.delay)
+        })
+    }
+
+    #reset (animation)
+    {
+        if (!animation) return 0
+        const savedProgress = animation.progress()
+        animation.progress(0).kill()
+        return savedProgress
+    }
+
+    #render ()
+    {
+        const prog = this.#reset(this.#e.prog.anim)
+        const items = this.#e.tag.self.querySelectorAll('[data-ff]')
+        const width = parseInt(getComputedStyle(items[0]).width, 10)
+        const [xFrom, xTo] = this.#e.set.direction === 'left' ? [0, -width] : [-width, 0]
+
+        this.#e.prog.anim = gsap.fromTo(
+            items,
+            { x: xFrom },
+            {
+                x: xTo,
+                duration: this.#e.set.duration,
+                ease: this.#e.set.ease,
+                repeat: -1,
+            }
+        )
+        this.#e.prog.anim.progress(prog)
+    }
+}
+
+
 class Slider01
 {
     #e
