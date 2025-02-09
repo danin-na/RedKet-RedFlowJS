@@ -29,7 +29,6 @@ class Icon01
     }
 }
 
-
 class Marquee01
 {
     #e
@@ -92,7 +91,6 @@ class Marquee01
         this.#e.prog.anim.progress(prog)
     }
 }
-
 
 class Slider01
 {
@@ -290,3 +288,87 @@ class RF
         RF.#log_success('Constructor', 'instance initialized.')
     }
 }
+
+document.addEventListener('DOMContentLoaded', () =>
+{
+    //onst RedFlow = new RF()
+
+    const T = new Test()
+    console.log(T.j)
+
+    /*
+
+    #component = {
+        el: {
+            _container,
+            container: { id },
+            _slider,
+            slider: { id },
+        },
+        opts: {
+            ease,
+            direction,
+            duration,
+        },
+        prog: {
+            val,
+            time,
+            anim,
+            delay,
+        },
+    }
+
+    this.#component.el
+
+    data-rf-comp-el
+    data-rf-comp-opt
+    data-rf-comp-prog
+
+    data-rf-trig-el
+    data-rf-trig-opt 
+    data-rf-trig-prog 
+
+    document.querySelectorAll('[data-rf-c="marquee01"]').forEach((el) => {
+        RedFlow.comp.create.Marquee01({
+            tag: {
+                self: el,
+                item: el.querySelector('[data-rf-c-tag-item]'),
+            },
+            set: {
+                ease: el.getAttribute('data-rf-c-set-ease'),
+                direction: el.getAttribute('data-rf-c-set-direction'),
+                duration: el.getAttribute('data-rf-c-tag-set-duration'),
+            },
+        })
+    })
+
+    // Slider01
+    document.querySelectorAll('[data-rf-c="slider01"]').forEach((el) => {
+        RedFlow.comp.create.Slider01({
+            tag: {
+                self: el,
+                mask: el.querySelector('[data-rf-c-tag-mask]'),
+                next: el.querySelector('[data-rf-c-tag-next]'),
+                prev: el.querySelector('[data-rf-c-tag-perv]'),
+                slides: el.querySelectorAll('[data-rf-c-tag-slide'),
+            },
+            set: {
+                ease: el.getAttribute('data-rf-c-set-ease'),
+                duration: el.getAttribute('data-rf-c-set-duration'),
+            },
+        })
+    })
+
+    // Icon01
+    document.querySelectorAll('[data-rf-c="icon01"]').forEach((el) => {
+        RedFlow.comp.create.Icon01({
+            tag: {
+                self: el,
+            },
+            set: {
+                svgPath: el.getAttribute('data-rf-c-set-svgpath'),
+            },
+        })
+    })
+    */
+})
