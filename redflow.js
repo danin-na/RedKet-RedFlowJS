@@ -317,56 +317,22 @@ class RF
     }
 }
 
-class Test
-{
-    #component = {
-        el: {
-            _container,
-            container: { id },
-            _slider,
-            slider: { id },
-        },
-        opts: {
-            ease,
-            direction,
-            duration,
-        },
-        prog: {
-            val,
-            time,
-            anim,
-            delay,
-        },
-    }
-
-    constructor(c = {})
-    {
-        this.#component.el.this.#elem.container.id
-        this.#elem._slider
-        this.#elem.slider.id
-
-        this.#prog.val = 20
-        this.#prog.time = null
-        this.#prog.anim = null
-        this.#prog.delay = 200
-    }
-
-    #render ()
-    {
-        this.#elem.container.id
-    }
+Class K {
+    constructor()
 }
+
 
 document.addEventListener("DOMContentLoaded", () =>
 {
     //onst RedFlow = new RF()
 
-    const T = new Test()
-    console.log(T.j)
+    const T = new K()
+    console.log(sss)
+
 
     /*
 
-    #component = {
+    #comp = {
         el: {
             _container,
             container: { id },
@@ -389,6 +355,7 @@ document.addEventListener("DOMContentLoaded", () =>
     this.#component.el
 
     data-rf-comp-el
+    data-rf-comp-sync
     data-rf-comp-opt
     data-rf-comp-prog
 
