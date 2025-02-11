@@ -317,6 +317,46 @@ class RF
     }
 }
 
+class Test
+{
+    #component = {
+        el: {
+            _container,
+            container: { id },
+            _slider,
+            slider: { id },
+        },
+        opts: {
+            ease,
+            direction,
+            duration,
+        },
+        prog: {
+            val,
+            time,
+            anim,
+            delay,
+        },
+    }
+
+    constructor(c = {})
+    {
+        this.#component.el.this.#elem.container.id
+        this.#elem._slider
+        this.#elem.slider.id
+
+        this.#prog.val = 20
+        this.#prog.time = null
+        this.#prog.anim = null
+        this.#prog.delay = 200
+    }
+
+    #render ()
+    {
+        this.#elem.container.id
+    }
+}
+
 document.addEventListener("DOMContentLoaded", () =>
 {
     //onst RedFlow = new RF()
