@@ -317,51 +317,70 @@ class RF
     }
 }
 
-Class K {
+class Sample_Comp
+{
+    #Comp = {
+        el: { container, slide },
+        sync: { container, slide },
+        opt: { ease, direction, duration },
+        prog: { val, time, anim, delay },
+    }
+
+    /*
+    el :
+    
+    data-rf-comp-el-container
+    data-rf-comp-el-slide
+
+    sync :
+    
+    data-rf-comp-sync-container
+    data-rf-comp-sync-slide
+
+    opt :
+
+    data-rf-comp-opt-ease
+    data-rf-comp-opt-duration
+    data-rf-comp-opt-direction
+
+    prog :
+
+    data-rf-comp-prog-val
+    data-rf-comp-prog-anim
+    data-rf-comp-prog-time
+    data-rf-comp-prog-delat
+
+    */
     constructor()
+    {
+        // el
+        this.#Comp.el.container
+        this.#Comp.el.slide
+
+        // sync
+        this.#Comp.sync.container
+        this.#Comp.sync.slide
+
+        // opt
+        this.#Comp.opt.ease
+        this.#Comp.opt.duration
+        this.#Comp.opt.direction
+
+        // prog
+        this.#Comp.prog.val
+        this.#Comp.prog.anim
+        this.#Comp.prog.time
+        this.#Comp.prog.delay
+    }
 }
 
 
 document.addEventListener("DOMContentLoaded", () =>
 {
-    //onst RedFlow = new RF()
-
-    const T = new K()
-    console.log(sss)
-
 
     /*
 
-    #comp = {
-        el: {
-            _container,
-            container: { id },
-            _slider,
-            slider: { id },
-        },
-        opts: {
-            ease,
-            direction,
-            duration,
-        },
-        prog: {
-            val,
-            time,
-            anim,
-            delay,
-        },
-    }
-
-    this.#component.el
-
-    data-rf-comp-el
-    data-rf-comp-sync
-    data-rf-comp-opt
-    data-rf-comp-prog
-
-    data-rf-trig-el
-    data-rf-trig-opt 
-    data-rf-trig-prog 
+    const RedFlow = new RF()
 
     document.querySelectorAll('[data-rf-c="marquee01"]').forEach((el) => {
         RedFlow.comp.create.Marquee01({
