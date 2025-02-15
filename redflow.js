@@ -1,3 +1,60 @@
+class Sample_Comp
+{
+    #Comp = {
+        el: { container, slide },
+        sync: { container, slide },
+        opt: { ease, direction, duration },
+        prog: { val, time, anim, delay },
+    }
+
+    /*
+    el :
+    
+    data-rf-comp-el-container
+    data-rf-comp-el-slide
+
+    sync :
+    
+    data-rf-comp-sync-container
+    data-rf-comp-sync-slide
+
+    opt :
+
+    data-rf-comp-opt-ease
+    data-rf-comp-opt-duration
+    data-rf-comp-opt-direction
+
+    prog :
+
+    data-rf-comp-prog-val
+    data-rf-comp-prog-anim
+    data-rf-comp-prog-time
+    data-rf-comp-prog-delat
+
+    */
+    constructor()
+    {
+        // el
+        this.#Comp.el.container
+        this.#Comp.el.slide
+
+        // sync
+        this.#Comp.sync.container
+        this.#Comp.sync.slide
+
+        // opt
+        this.#Comp.opt.ease
+        this.#Comp.opt.duration
+        this.#Comp.opt.direction
+
+        // prog
+        this.#Comp.prog.val
+        this.#Comp.prog.anim
+        this.#Comp.prog.time
+        this.#Comp.prog.delay
+    }
+}
+
 class Icon01
 {
     #e
@@ -31,70 +88,82 @@ class Icon01
 
 class Marquee01
 {
-    #e
+    #Comp;
 
     constructor(c = {})
     {
-        this.#e = {
-            tag: {
-                self: c.tag.self,
-                item: c.tag.item,
-            },
-            set: {
-                ease: c.set.ease || "none",
-                direction: c.set.direction || "left",
-                duration: parseFloat(c.set.duration) || 30,
-            },
-            prog: {
-                self: 0,
-                id: null,
-                anim: null,
-                delay: 200,
-            },
-        }
 
-        this.#e.tag.item.setAttribute("data-ff", "")
-        this.#e.tag.self.append(this.#e.tag.item.cloneNode(true))
-        this.#render()
+        this.#Comp = {};
+        this.#Comp.el = {};
+        this.#Comp.el.container = c.tag?.self;
+        this.#Comp.el.slide = c.tag?.item;
+        this.#Comp.sync = {};
+        this.#Comp.sync.container = null;
+        this.#Comp.sync.slide = null;
+        this.#Comp.opt = {};
+        this.#Comp.opt.ease = c.set?.ease || "none";
+        this.#Comp.opt.direction = c.set?.direction || "left";
+        this.#Comp.opt.duration = parseFloat(c.set?.duration) || 30;
+        this.#Comp.prog = {};
+        this.#Comp.prog.val = 0;
+        this.#Comp.prog.time = null;
+        this.#Comp.prog.anim = null;
+        this.#Comp.prog.delay = 200;
+
+        // Setup the slide element and duplicate it for the marquee effect
+        this.#Comp.el.slide.setAttribute("data-slide-item", "");
+        this.#Comp.el.container.append(this.#Comp.el.slide.cloneNode(true));
+
+        // Start the render loop
+        this.#render();
+
+        // Update the animation on window resize
         window.addEventListener("resize", () =>
         {
-            clearTimeout(this.#e.prog.id)
-            this.#e.prog.id = setTimeout(
-                () => this.#render(),
-                this.#e.prog.delay
-            )
-        })
+            clearTimeout(this.#Comp.prog.time);
+            this.#Comp.prog.time = setTimeout(() => this.#render(), this.#Comp.prog.delay);
+        });
     }
 
     #reset (animation)
     {
-        if (!animation) return 0
-        const savedProgress = animation.progress()
-        animation.progress(0).kill()
-        return savedProgress
+        if (!animation) return 0;
+        const savedProgress = animation.progress();
+        animation.progress(0).kill();
+        return savedProgress;
     }
 
     #render ()
     {
-        const prog = this.#reset(this.#e.prog.anim)
-        const items = this.#e.tag.self.querySelectorAll("[data-ff]")
-        const width = parseInt(getComputedStyle(items[0]).width, 10)
-        const [xFrom, xTo] =
-            this.#e.set.direction === "left" ? [0, -width] : [-width, 0]
+        const prog = this.#reset(this.#Comp.prog.anim);
+        const items = this.#Comp.el.container.querySelectorAll("[data-slide-item]");
+        const width = parseInt(getComputedStyle(items[0]).width, 10);
+        const [xFrom, xTo] = this.#Comp.opt.direction === "left" ? [0, -width] : [-width, 0];
 
-        this.#e.prog.anim = gsap.fromTo(
+        this.#Comp.prog.anim = gsap.fromTo(
             items,
             { x: xFrom },
             {
                 x: xTo,
-                duration: this.#e.set.duration,
-                ease: this.#e.set.ease,
+                duration: this.#Comp.opt.duration,
+                ease: this.#Comp.opt.ease,
                 repeat: -1,
             }
-        )
-        this.#e.prog.anim.progress(prog)
+        );
+        this.#Comp.prog.anim.progress(prog);
+    }
+
+    run ()
+    {
+        this.#render();
+        window.addEventListener("resize", () =>
+        {
+            clearTimeout(this.#Comp.prog.time);
+            this.#Comp.prog.time = setTimeout(() => this.#render(), this.#Comp.prog.delay);
+        });
     }
 }
+
 
 class Slider01
 {
@@ -317,62 +386,7 @@ class RF
     }
 }
 
-class Sample_Comp
-{
-    #Comp = {
-        el: { container, slide },
-        sync: { container, slide },
-        opt: { ease, direction, duration },
-        prog: { val, time, anim, delay },
-    }
 
-    /*
-    el :
-    
-    data-rf-comp-el-container
-    data-rf-comp-el-slide
-
-    sync :
-    
-    data-rf-comp-sync-container
-    data-rf-comp-sync-slide
-
-    opt :
-
-    data-rf-comp-opt-ease
-    data-rf-comp-opt-duration
-    data-rf-comp-opt-direction
-
-    prog :
-
-    data-rf-comp-prog-val
-    data-rf-comp-prog-anim
-    data-rf-comp-prog-time
-    data-rf-comp-prog-delat
-
-    */
-    constructor()
-    {
-        // el
-        this.#Comp.el.container
-        this.#Comp.el.slide
-
-        // sync
-        this.#Comp.sync.container
-        this.#Comp.sync.slide
-
-        // opt
-        this.#Comp.opt.ease
-        this.#Comp.opt.duration
-        this.#Comp.opt.direction
-
-        // prog
-        this.#Comp.prog.val
-        this.#Comp.prog.anim
-        this.#Comp.prog.time
-        this.#Comp.prog.delay
-    }
-}
 
 
 document.addEventListener("DOMContentLoaded", () =>
