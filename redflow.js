@@ -86,43 +86,50 @@ class Icon01
     }
 }
 
+/**
+ * 
+ * config = 
+ * {
+ *      el :
+ *      {
+ *          container : null,
+ *          slide : null,
+ *      },
+ *      opt :
+ *      {
+ *          ease : null,
+ *          duration: null,
+ *          diraction : null,
+ *      },
+ * }
+ */
+
 class Marquee01
 {
     #Comp;
 
-    constructor(c = {})
+    constructor(config = {})
     {
-
+        //Set Attr
         this.#Comp = {};
         this.#Comp.el = {};
-        this.#Comp.el.container = c.tag?.self;
-        this.#Comp.el.slide = c.tag?.item;
+        this.#Comp.el.container = config.el.container
+        this.#Comp.el.slide = config.el.slide
         this.#Comp.sync = {};
         this.#Comp.sync.container = null;
         this.#Comp.sync.slide = null;
         this.#Comp.opt = {};
-        this.#Comp.opt.ease = c.set?.ease || "none";
-        this.#Comp.opt.direction = c.set?.direction || "left";
-        this.#Comp.opt.duration = parseFloat(c.set?.duration) || 30;
+        this.#Comp.opt.ease = config.opt.ease || "none";
+        this.#Comp.opt.direction = config.opt.direction || "left";
+        this.#Comp.opt.duration = config.opt.duration || 30;
         this.#Comp.prog = {};
         this.#Comp.prog.val = 0;
         this.#Comp.prog.time = null;
         this.#Comp.prog.anim = null;
         this.#Comp.prog.delay = 200;
-
-        // Setup the slide element and duplicate it for the marquee effect
+        // Construct
         this.#Comp.el.slide.setAttribute("data-slide-item", "");
         this.#Comp.el.container.append(this.#Comp.el.slide.cloneNode(true));
-
-        // Start the render loop
-        this.#render();
-
-        // Update the animation on window resize
-        window.addEventListener("resize", () =>
-        {
-            clearTimeout(this.#Comp.prog.time);
-            this.#Comp.prog.time = setTimeout(() => this.#render(), this.#Comp.prog.delay);
-        });
     }
 
     #reset (animation)
@@ -163,6 +170,7 @@ class Marquee01
         });
     }
 }
+
 
 
 class Slider01
@@ -263,10 +271,8 @@ class RF
     static #CACHE_CREDIT = false
     static #CACHE_SCRIPT = {}
 
-    static #cdn_gsap =
-        "https://cdnjs.cloudflare.com/ajax/libs/gsap/3.6.1/gsap.min.js"
-    static #cdn_jquary =
-        "https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"
+    static #cdn_gsap = "https://cdnjs.cloudflare.com/ajax/libs/gsap/3.6.1/gsap.min.js"
+    static #cdn_jquary = "https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"
 
     static #log_error (n, m)
     {
@@ -392,9 +398,10 @@ class RF
 document.addEventListener("DOMContentLoaded", () =>
 {
 
+    const RedFlow = new RF()
     /*
 
-    const RedFlow = new RF()
+    
 
     document.querySelectorAll('[data-rf-c="marquee01"]').forEach((el) => {
         RedFlow.comp.create.Marquee01({
