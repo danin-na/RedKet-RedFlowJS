@@ -82,13 +82,12 @@ class Icon01
 
     static initAll ()
     {
-        document.querySelectorAll("[data-svg]").forEach((el) => new Icon01(el))
+        document.querySelectorAll('[data-svg]').forEach((el) => new Icon01(el))
     }
 }
 
 /**
- * 
- * config = 
+ * config =
  * {
  *      el :
  *      {
@@ -106,46 +105,46 @@ class Icon01
 
 class Marquee01
 {
-    #Comp;
+    #Comp
 
     constructor(config = {})
     {
         //Set Attr
-        this.#Comp = {};
-        this.#Comp.el = {};
+        this.#Comp = {}
+        this.#Comp.el = {}
         this.#Comp.el.container = config.el.container
         this.#Comp.el.slide = config.el.slide
-        this.#Comp.sync = {};
-        this.#Comp.sync.container = null;
-        this.#Comp.sync.slide = null;
-        this.#Comp.opt = {};
-        this.#Comp.opt.ease = config.opt.ease || "none";
-        this.#Comp.opt.direction = config.opt.direction || "left";
-        this.#Comp.opt.duration = config.opt.duration || 30;
-        this.#Comp.prog = {};
-        this.#Comp.prog.val = 0;
-        this.#Comp.prog.time = null;
-        this.#Comp.prog.anim = null;
-        this.#Comp.prog.delay = 200;
+        this.#Comp.sync = {}
+        this.#Comp.sync.container = null
+        this.#Comp.sync.slide = null
+        this.#Comp.opt = {}
+        this.#Comp.opt.ease = config.opt.ease || 'none'
+        this.#Comp.opt.direction = config.opt.direction || 'left'
+        this.#Comp.opt.duration = config.opt.duration || 30
+        this.#Comp.prog = {}
+        this.#Comp.prog.val = 0
+        this.#Comp.prog.time = null
+        this.#Comp.prog.anim = null
+        this.#Comp.prog.delay = 200
         // Construct
-        this.#Comp.el.slide.setAttribute("data-slide-item", "");
-        this.#Comp.el.container.append(this.#Comp.el.slide.cloneNode(true));
+        this.#Comp.el.slide.setAttribute('data-slide-item', '')
+        this.#Comp.el.container.append(this.#Comp.el.slide.cloneNode(true))
     }
 
     #reset (animation)
     {
-        if (!animation) return 0;
-        const savedProgress = animation.progress();
-        animation.progress(0).kill();
-        return savedProgress;
+        if (!animation) return 0
+        const savedProgress = animation.progress()
+        animation.progress(0).kill()
+        return savedProgress
     }
 
     #render ()
     {
-        const prog = this.#reset(this.#Comp.prog.anim);
-        const items = this.#Comp.el.container.querySelectorAll("[data-slide-item]");
-        const width = parseInt(getComputedStyle(items[0]).width, 10);
-        const [xFrom, xTo] = this.#Comp.opt.direction === "left" ? [0, -width] : [-width, 0];
+        const prog = this.#reset(this.#Comp.prog.anim)
+        const items = this.#Comp.el.container.querySelectorAll('[data-slide-item]')
+        const width = parseInt(getComputedStyle(items[0]).width, 10)
+        const [xFrom, xTo] = this.#Comp.opt.direction === 'left' ? [0, -width] : [-width, 0]
 
         this.#Comp.prog.anim = gsap.fromTo(
             items,
@@ -156,22 +155,20 @@ class Marquee01
                 ease: this.#Comp.opt.ease,
                 repeat: -1,
             }
-        );
-        this.#Comp.prog.anim.progress(prog);
+        )
+        this.#Comp.prog.anim.progress(prog)
     }
 
     run ()
     {
-        this.#render();
-        window.addEventListener("resize", () =>
+        this.#render()
+        window.addEventListener('resize', () =>
         {
-            clearTimeout(this.#Comp.prog.time);
-            this.#Comp.prog.time = setTimeout(() => this.#render(), this.#Comp.prog.delay);
-        });
+            clearTimeout(this.#Comp.prog.time)
+            this.#Comp.prog.time = setTimeout(() => this.#render(), this.#Comp.prog.delay)
+        })
     }
 }
-
-
 
 class Slider01
 {
@@ -188,7 +185,7 @@ class Slider01
                 slides: c.tag.slides,
             },
             set: {
-                ease: c.set.ease || "none",
+                ease: c.set.ease || 'none',
                 duration: parseFloat(c.set.duration) || 0.5,
             },
             prog: {
@@ -203,12 +200,10 @@ class Slider01
 
         this.#run()
 
-        this.#e.tag.next.addEventListener("click", () =>
+        this.#e.tag.next.addEventListener('click', () =>
         {
             this.#e.prog.currentSlide =
-                this.#e.prog.currentSlide < this.#e.prog.totalSlides - 1
-                    ? this.#e.prog.currentSlide + 1
-                    : 0
+                this.#e.prog.currentSlide < this.#e.prog.totalSlides - 1 ? this.#e.prog.currentSlide + 1 : 0
             gsap.to(this.#e.tag.mask, {
                 duration: this.#e.set.duration,
                 ease: this.#e.set.ease,
@@ -216,12 +211,10 @@ class Slider01
             })
         })
 
-        this.#e.tag.prev.addEventListener("click", () =>
+        this.#e.tag.prev.addEventListener('click', () =>
         {
             this.#e.prog.currentSlide =
-                this.#e.prog.currentSlide > 0
-                    ? this.#e.prog.currentSlide - 1
-                    : this.#e.prog.totalSlides - 1
+                this.#e.prog.currentSlide > 0 ? this.#e.prog.currentSlide - 1 : this.#e.prog.totalSlides - 1
             gsap.to(this.#e.tag.mask, {
                 duration: this.#e.set.duration,
                 ease: this.#e.set.ease,
@@ -229,7 +222,7 @@ class Slider01
             })
         })
 
-        window.addEventListener("resize", () =>
+        window.addEventListener('resize', () =>
         {
             clearTimeout(this.#e.prog.id)
             this.#e.prog.id = setTimeout(() => this.#run(), this.#e.prog.delay)
@@ -271,8 +264,8 @@ class RF
     static #CACHE_CREDIT = false
     static #CACHE_SCRIPT = {}
 
-    static #cdn_gsap = "https://cdnjs.cloudflare.com/ajax/libs/gsap/3.6.1/gsap.min.js"
-    static #cdn_jquary = "https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"
+    static #cdn_gsap = 'https://cdnjs.cloudflare.com/ajax/libs/gsap/3.6.1/gsap.min.js'
+    static #cdn_jquary = 'https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js'
 
     static #log_error (n, m)
     {
@@ -286,22 +279,22 @@ class RF
     static #log_credit ()
     {
         document.body.insertAdjacentHTML(
-            "afterbegin",
+            'afterbegin',
             `<!-- ⭕ RedFlow - Official Webflow Library by RedKet -- Copyright © 2025 RedKet. All rights reserved. -->
              <!-- Unauthorized copying, modification, or distribution is prohibited. -- Visit: www.RedKet.com | www.Red.Ket -->`
         )
         document.body.insertAdjacentHTML(
-            "beforeend",
+            'beforeend',
             `<!-- ⭕ RedFlow | OFFICIAL WEBFLOW LIBRARY BY REDKET © 2025 REDKET | WWW.REDKET.COM | WWW.RED.KET -->`
         )
         console.log(
-            "%cRed%cFlow%c- official Webflow Library by %cRed%cKet%c\nCopyright Â© 2025 RedKet. All rights reserved.\nUnauthorized copying, modification, or distribution is prohibited.\nVisit: www.RedKet.com | www.Red.Ket",
-            "color:#c33;background:#000;font-weight:bold;padding:2px 4px;border-radius:3px;",
-            "color:#dfdfdf;background:#000;font-weight:bold;padding:2px 4px;border-radius:3px;",
-            "color:#aaa;background:#000;padding:2px 4px;border-radius:3px;",
-            "color:#c33;background:#000;font-weight:bold;padding:2px 4px;border-radius:3px;",
-            "color:#dfdfdf;background:#000;font-weight:bold;padding:2px 4px;border-radius:3px;",
-            "color:#888;font-size:11px;"
+            '%cRed%cFlow%c- official Webflow Library by %cRed%cKet%c\nCopyright Â© 2025 RedKet. All rights reserved.\nUnauthorized copying, modification, or distribution is prohibited.\nVisit: www.RedKet.com | www.Red.Ket',
+            'color:#c33;background:#000;font-weight:bold;padding:2px 4px;border-radius:3px;',
+            'color:#dfdfdf;background:#000;font-weight:bold;padding:2px 4px;border-radius:3px;',
+            'color:#aaa;background:#000;padding:2px 4px;border-radius:3px;',
+            'color:#c33;background:#000;font-weight:bold;padding:2px 4px;border-radius:3px;',
+            'color:#dfdfdf;background:#000;font-weight:bold;padding:2px 4px;border-radius:3px;',
+            'color:#888;font-size:11px;'
         )
     }
 
@@ -318,16 +311,16 @@ class RF
         }
         // Add a preload link hint if not already added.
         if (!document.querySelector(`link[rel="preload"][href="${u}"]`)) {
-            const link = document.createElement("link")
-            link.rel = "preload"
+            const link = document.createElement('link')
+            link.rel = 'preload'
             link.href = u
-            link.as = "script"
+            link.as = 'script'
             document.head.appendChild(link)
         }
         // Load the script and cache the promise.
         return (RF.#CACHE_SCRIPT[u] = new Promise((resolve, reject) =>
         {
-            const script = document.createElement("script")
+            const script = document.createElement('script')
             script.src = u
             script.async = true
             script.onload = () =>
@@ -336,7 +329,7 @@ class RF
             }
             script.onerror = () =>
             {
-                RF.#log_error("loadScript", `Failed to load script: ${u}`)
+                RF.#log_error('loadScript', `Failed to load script: ${u}`)
                 reject(new Error(`Failed to load script: ${u}`))
             }
             document.body.appendChild(script)
@@ -356,29 +349,12 @@ class RF
 
     Component = {
         Marquee01: {
-            create: (config) =>
-                this.#createComponent(
-                    [RF.#cdn_gsap],
-                    RF.#components.Marquee01,
-                    "Marquee 01",
-                    config
-                ),
+            /** config = { el : { container : null, slide : null, }, opt : { ease : null, duration: null, diraction : null } } */
+            create: (config) => this.#createComponent([RF.#cdn_gsap], RF.#components.Marquee01, 'Marquee 01', config),
         },
         create: {
-            Icon01: (config) =>
-                this.#createComponent(
-                    [],
-                    RF.#components.Icon01,
-                    "Icon 01",
-                    config
-                ),
-            Slider01: (config) =>
-                this.#createComponent(
-                    [RF.#cdn_gsap],
-                    RF.#components.Slider01,
-                    "Slider 01",
-                    config
-                ),
+            Icon01: (config) => this.#createComponent([], RF.#components.Icon01, 'Icon 01', config),
+            Slider01: (config) => this.#createComponent([RF.#cdn_gsap], RF.#components.Slider01, 'Slider 01', config),
         },
     }
 
@@ -388,17 +364,29 @@ class RF
             RF.#log_credit()
             RF.#CACHE_CREDIT = true
         }
-        RF.#log_success("Constructor", "instance initialized.")
+        RF.#log_success('Constructor', 'instance initialized.')
     }
 }
 
-
-
-
-document.addEventListener("DOMContentLoaded", () =>
+document.addEventListener('DOMContentLoaded', () =>
 {
-
     const RedFlow = new RF()
+
+    document.querySelectorAll('[data-rf-comp-el-container="marquee01"]').forEach((e) =>
+    {
+        RedFlow.Component.Marquee01.create({
+            el: {
+                container: e,
+                slide: e.querySelector('[data-rf-comp-el-slide'),
+            },
+            opt: {
+                ease: e.getAttribute('data-rf-comp-opt-ease'),
+                duration: parseFloat(e.getAttribute('data-rf-comp-opt-duration')),
+                direction: e.getAttribute('data-rf-comp-opt-direction'),
+            },
+        }).then((e) => e.run())
+    })
+
     /*
 
     
