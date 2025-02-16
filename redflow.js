@@ -372,19 +372,24 @@ document.addEventListener('DOMContentLoaded', () =>
 {
     const RedFlow = new RF()
 
-    document.querySelectorAll('[data-rf-comp-el-container="marquee01"]').forEach((e) =>
+    document.querySelectorAll('[data-rf-comp-el-container]').forEach((e) =>
     {
-        RedFlow.Component.Marquee01.create({
-            el: {
-                container: e,
-                slide: e.querySelector('[data-rf-comp-el-slide'),
-            },
-            opt: {
-                ease: e.getAttribute('data-rf-comp-opt-ease'),
-                duration: parseFloat(e.getAttribute('data-rf-comp-opt-duration')),
-                direction: e.getAttribute('data-rf-comp-opt-direction'),
-            },
-        }).then((e) => e.run())
+
+        if (e.getAttribute('data-rf-comp-el') == "marquee01") {
+            RedFlow.Component.Marquee01.create({
+                el: {
+                    container: e,
+                    slide: e.querySelector('[data-rf-comp-el-slide'),
+                },
+                opt: {
+                    ease: e.getAttribute('data-rf-comp-opt-ease'),
+                    duration: parseFloat(e.getAttribute('data-rf-comp-opt-duration')),
+                    direction: e.getAttribute('data-rf-comp-opt-direction'),
+                },
+            }).then((e) => e.run())
+        }
+
+
     })
 
     /*
