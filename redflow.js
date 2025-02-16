@@ -348,14 +348,9 @@ class RF
     }
 
     Component = {
-        Marquee01: {
-            /** config = { el : { container : null, slide : null, }, opt : { ease : null, duration: null, diraction : null } } */
-            create: (config) => this.#createComponent([RF.#cdn_gsap], RF.#components.Marquee01, 'Marquee 01', config),
-        },
-        create: {
-            Icon01: (config) => this.#createComponent([], RF.#components.Icon01, 'Icon 01', config),
-            Slider01: (config) => this.#createComponent([RF.#cdn_gsap], RF.#components.Slider01, 'Slider 01', config),
-        },
+        /** config = { el : { container : null, slide : null, }, opt : { ease : null, duration: null, diraction : null } } */
+        marquee_01: (config) => this.#createComponent([RF.#cdn_gsap], RF.#components.Marquee01, 'Marquee 01', config),
+        slider_01: (config) => this.#createComponent([RF.#cdn_gsap], RF.#components.Slider01, 'Slider 01', config),
     }
 
     constructor()
@@ -374,9 +369,9 @@ document.addEventListener('DOMContentLoaded', () =>
 
     document.querySelectorAll('[data-rf-comp-el-container]').forEach((e) =>
     {
+        if (e.getAttribute('data-rf-comp-el-container') == 'marquee01') {
 
-        if (e.getAttribute('data-rf-comp-el') == "marquee01") {
-            RedFlow.Component.Marquee01.create({
+            const config = {
                 el: {
                     container: e,
                     slide: e.querySelector('[data-rf-comp-el-slide'),
@@ -386,9 +381,10 @@ document.addEventListener('DOMContentLoaded', () =>
                     duration: parseFloat(e.getAttribute('data-rf-comp-opt-duration')),
                     direction: e.getAttribute('data-rf-comp-opt-direction'),
                 },
-            }).then((e) => e.run())
-        }
+            }
 
+            RedFlow.Component.marquee_01(config).then((marquee) => marquee.run())
+        }
 
     })
 
@@ -397,18 +393,6 @@ document.addEventListener('DOMContentLoaded', () =>
     
 
     document.querySelectorAll('[data-rf-c="marquee01"]').forEach((el) => {
-        RedFlow.comp.create.Marquee01({
-            tag: {
-                self: el,
-                item: el.querySelector('[data-rf-c-tag-item]'),
-            },
-            set: {
-                ease: el.getAttribute('data-rf-c-set-ease'),
-                direction: el.getAttribute('data-rf-c-set-direction'),
-                duration: el.getAttribute('data-rf-c-tag-set-duration'),
-            },
-        })
-    })
 
     // Slider01
     document.querySelectorAll('[data-rf-c="slider01"]').forEach((el) => {
