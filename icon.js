@@ -38,14 +38,3 @@ const config = {
         }
     }
 };
-
-// Create one worker instance and initialize it
-const iconWorker = new IconWorker(config);
-iconWorker.init();
-
-
-// data-rf-worker-
-// data-rf-animer-
-// data-rf-trigger-
-// data-rf-component-
-
