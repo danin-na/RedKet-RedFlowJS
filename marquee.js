@@ -12,6 +12,10 @@ class Marquee01
         this.#Comp.opt = {}
         this.#Comp.prog = {}
 
+        /**
+         * data-rf-comp-
+         */
+
         this.#Comp.el.container = config.el.container
         this.#Comp.el.slide = config.el.slide
 
@@ -61,6 +65,7 @@ class Marquee01
 
     run ()
     {
+
         this.#render()
         window.addEventListener('resize', () =>
         {
