@@ -4,24 +4,29 @@ class Marquee01
 
     constructor(config = {})
     {
+
         //Set Attr
         this.#Comp = {}
         this.#Comp.el = {}
+        this.#Comp.sync = {}
+        this.#Comp.opt = {}
+        this.#Comp.prog = {}
+
         this.#Comp.el.container = config.el.container
         this.#Comp.el.slide = config.el.slide
-        this.#Comp.sync = {}
+
         this.#Comp.sync.container = null
         this.#Comp.sync.slide = null
-        this.#Comp.opt = {}
+
         this.#Comp.opt.ease = config.opt.ease || 'none'
         this.#Comp.opt.direction = config.opt.direction || 'left'
         this.#Comp.opt.duration = config.opt.duration || 30
-        this.#Comp.prog = {}
+
         this.#Comp.prog.val = 0
         this.#Comp.prog.time = null
         this.#Comp.prog.anim = null
         this.#Comp.prog.delay = 200
-        // Construct
+
         this.#Comp.el.slide.setAttribute('data-slide-item', '')
         this.#Comp.el.container.append(this.#Comp.el.slide.cloneNode(true))
     }
