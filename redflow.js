@@ -2,21 +2,21 @@ class Icon_01
 {
     #rf = {
         worker: {
-            tag: { target: null },
+            tag: { targetID: null },
             opt: { source: null },
         },
     }
 
     constructor(config = {})
     {
-        this.#rf.worker.tag.target = config.rf.worker.tag.target // data-rf-worker-tag-target
+        this.#rf.worker.tag.targetID = config.rf.worker.tag.targetID // data-rf-worker-tag-targetID
         this.#rf.worker.opt.source = config.rf.worker.opt.source // data-rf-worker-tag-source
+        console.log(config)
     }
     work ()
     {
-        document.querySelectorAll(this.#rf.worker.tag.target).forEach((e) =>
+        document.querySelectorAll(`[${this.#rf.worker.tag.targetID}]`).forEach((e) =>
         {
-            console.log(this.#rf.worker.opt.source)
             e.innerHTML = decodeURIComponent(e.getAttribute(this.#rf.worker.opt.source))
         })
         return this
@@ -116,16 +116,10 @@ class RF
 
         this.Worker = {
             Icon_01: (config) => ({
-                run: () => RF.loadLibs([]).then(() => new Icon_01(config).work()),
+                work: () => RF.loadLibs([]).then(() => new Icon_01(config).work()),
             }),
             Slider_01: (config) => ({
                 run: () => RF.loadLibs(['gsap']).then(() => new Slider_01(config).work()),
-            }),
-            Mover_01: (config) => ({
-                run: () => RF.loadLibs(['gsap', 'jquery']).then(() => new Mover_01(config).work()),
-            }),
-            WRAPPER_01: (config) => ({
-                run: () => RF.loadLibs(['jquery']).then(() => new WRAPPER_01(config).work()),
             }),
         }
     }
@@ -138,9 +132,9 @@ document.addEventListener('DOMContentLoaded', () =>
     RedFlow.Worker.Icon_01({
         rf: {
             worker: {
-                tag: { target: 'ddddd' },
-                opt: { source: 'gggggg' },
+                tag: { targetID: 'data-rf-worker-tag-targetid="icon_01"' },
+                opt: { source: 'data-rf-worker-opt-source' },
             },
         },
-    }).run()
+    }).work()
 })
