@@ -24,7 +24,7 @@ class Icon_01
 }
 
 
-class Marquee_01
+class Marquee_xx
 {
     #rf = {
         component: {

@@ -1,3 +1,4 @@
+/*
 class Icon_01
 {
     #rf = {
@@ -9,8 +10,8 @@ class Icon_01
 
     constructor(config = {})
     {
-        this.#rf.worker.tag.targetID = config.rf.worker.tag.targetID // data-rf-worker-tag-targetID
-        this.#rf.worker.opt.source = config.rf.worker.opt.source // data-rf-worker-tag-source
+        this.#rf.worker.tag.targetID = config.rf.worker.tag.targetID // rf-worker-tag-targetID
+        this.#rf.worker.opt.source = config.rf.worker.opt.source // rf-worker-tag-source
         console.log(config)
     }
     work ()
@@ -20,6 +21,77 @@ class Icon_01
             e.innerHTML = decodeURIComponent(e.getAttribute(this.#rf.worker.opt.source))
         })
         return this
+    }
+}
+*/
+
+class Marquee_01
+{
+    #rf = {
+        component: {
+            e: {
+                id: { self: null, slider: null },
+                tag: { self: null, slider: null },
+                opt: { ease: null, duration: null, direction: null },
+                prog: { delay: null, time: null, anim: null },
+            },
+        },
+    }
+
+    constructor(config = {})
+    {
+        this.#rf.component.e.tag.self = config.tag.self
+        this.#rf.component.e.tag.slider = config.tag.slider
+
+        this.#rf.component.e.opt.ease = config.opt.ease || 'none'
+        this.#rf.component.e.opt.duration = config.opt.duration || 30
+        this.#rf.component.e.opt.direction = config.opt.direction || 'left'
+
+        this.#rf.component.e.prog.delay = 200
+        this.#rf.component.e.prog.time = null
+        this.#rf.component.e.prog.anim = null
+
+        // Set data attribute using new naming convention
+        this.#rf.component.e.tag.slider.setAttribute('rf-component-self-selector', '')
+        this.#rf.component.e.tag.self.append(this.#rf.component.e.tag.slider.cloneNode(true))
+    }
+
+    #reset (animation)
+    {
+        if (!animation) return 0
+        const savedProgress = animation.progress()
+        animation.progress(0).kill()
+        return savedProgress
+    }
+
+    #render ()
+    {
+        const prog = this.#reset(this.#rf.component.e.prog.anim)
+        const items = this.#rf.component.e.tag.self.querySelectorAll('[rf-component-self-selector]')
+        const width = parseInt(getComputedStyle(items[0]).width, 10)
+        const [xFrom, xTo] = this.#rf.component.e.opt.direction === 'left' ? [0, -width] : [-width, 0]
+
+        this.#rf.component.e.prog.anim = gsap.fromTo(
+            items,
+            { x: xFrom },
+            {
+                x: xTo,
+                duration: this.#rf.component.e.opt.duration,
+                ease: this.#rf.component.e.opt.ease,
+                repeat: -1,
+            }
+        )
+        this.#rf.component.e.prog.anim.progress(prog)
+    }
+
+    create ()
+    {
+        this.#render()
+        window.addEventListener('resize', () =>
+        {
+            clearTimeout(this.#rf.component.e.prog.time)
+            this.#rf.component.e.prog.time = setTimeout(() => this.#render(), this.#rf.component.e.prog.delay)
+        })
     }
 }
 
@@ -62,6 +134,7 @@ class RF
 {
     static #CACHE_SCRIPT = {}
     static #CACHE_CREDIT = false
+
     static #cdn_gsap = 'https://cdnjs.cloudflare.com/ajax/libs/gsap/3.6.1/gsap.min.js'
     static #cdn_jquary = 'https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js'
 
@@ -113,15 +186,29 @@ class RF
             RF.#CACHE_CREDIT = true
         }
         RF_Log.log_success('Constructor', 'instance initialized.')
+    }
 
-        this.Worker = {
-            Icon_01: (config) => ({
-                work: () => RF.loadLibs([]).then(() => new Icon_01(config).work()),
-            }),
-            Slider_01: (config) => ({
-                run: () => RF.loadLibs(['gsap']).then(() => new Slider_01(config).work()),
-            }),
-        }
+    Component = {
+        Marquee_01: (config) => ({
+            create: () =>
+                RF.loadLibs(['gsap']).then(() =>
+                {
+                    document.querySelectorAll(`[${config.id.self}]`).forEach((e) =>
+                    {
+                        new Marquee_01({
+                            tag: {
+                                self: e,
+                                slider: e.querySelector(`[${config.id.slider}]`),
+                            },
+                            opt: {
+                                ease: e.getAttribute(config.opt.ease),
+                                duration: parseFloat(e.getAttribute(config.opt.duration)),
+                                direction: e.getAttribute(config.opt.direction),
+                            },
+                        }).create()
+                    })
+                }),
+        }),
     }
 }
 
@@ -129,12 +216,15 @@ document.addEventListener('DOMContentLoaded', () =>
 {
     const RedFlow = new RF()
 
-    RedFlow.Worker.Icon_01({
-        rf: {
-            worker: {
-                tag: { targetID: 'data-rf-worker-tag-targetid="icon_01"' },
-                opt: { source: 'data-rf-worker-opt-source' },
-            },
+    RedFlow.Component.Marquee_01({
+        id: {
+            self: 'rf-component-e-id-self="marquee_01"',
+            slider: 'rf-component-e-id-slider',
         },
-    }).work()
+        opt: {
+            ease: 'rf-component-e-opt-ease',
+            duration: 'rf-component-e-opt-duration',
+            direction: 'rf-component-e-opt-direction',
+        },
+    }).create()
 })
