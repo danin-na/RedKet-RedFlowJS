@@ -1,99 +1,126 @@
-/*
 class Icon_01
 {
     #rf = {
         worker: {
-            tag: { targetID: null },
-            opt: { source: null },
+            t: {
+                tag: { icon: null },
+                opt: { source: null },
+            }
         },
     }
 
     constructor(config = {})
     {
-        this.#rf.worker.tag.targetID = config.rf.worker.tag.targetID // rf-worker-tag-targetID
-        this.#rf.worker.opt.source = config.rf.worker.opt.source // rf-worker-tag-source
+        this.#rf.worker.t.tag.icon = config.rf.worker.tag.icon // rf-worker-tag-icon
+        this.#rf.worker.t.opt.source = config.rf.worker.opt.source // rf-worker-tag-source
         console.log(config)
     }
     work ()
     {
-        document.querySelectorAll(`[${this.#rf.worker.tag.targetID}]`).forEach((e) =>
+        document.querySelectorAll(`[${this.#rf.worker.tag.icon}]`).forEach((e) =>
         {
             e.innerHTML = decodeURIComponent(e.getAttribute(this.#rf.worker.opt.source))
         })
         return this
     }
 }
-*/
 
 class Marquee_01
 {
     #rf = {
-        component: {
-            e: {
-                id: { self: null, slider: null },
-                tag: { self: null, slider: null },
-                opt: { ease: null, duration: null, direction: null },
-                prog: { delay: null, time: null, anim: null },
-            },
+        element: {
+            id: { self: null, slider: null },
+            tag: { self: null, slider: null },
+            opt: { ease: null, duration: null, direction: null },
+            prog: { delay: null, time: null, anim: null, current: null },
+            render: { items: null, width: null, xFrom: null, xTo: null },
         },
     }
 
-    constructor(config = {})
+    constructor(c = {})
     {
-        this.#rf.component.e.tag.self = config.tag.self
-        this.#rf.component.e.tag.slider = config.tag.slider
+        const { element: e } = this.#rf
 
-        this.#rf.component.e.opt.ease = config.opt.ease || 'none'
-        this.#rf.component.e.opt.duration = config.opt.duration || 30
-        this.#rf.component.e.opt.direction = config.opt.direction || 'left'
+        e.tag.self = c.tag.self
+        e.tag.slider = c.tag.slider
 
-        this.#rf.component.e.prog.delay = 200
-        this.#rf.component.e.prog.time = null
-        this.#rf.component.e.prog.anim = null
+        e.opt.ease = c.opt.ease || 'none'
+        e.opt.duration = c.opt.duration || 30
+        e.opt.direction = c.opt.direction || 'left'
 
-        // Set data attribute using new naming convention
-        this.#rf.component.e.tag.slider.setAttribute('rf-component-self-selector', '')
-        this.#rf.component.e.tag.self.append(this.#rf.component.e.tag.slider.cloneNode(true))
+        e.prog.current = 0
+        e.prog.delay = 200
+        e.prog.time = null
+        e.prog.anim = null
     }
 
-    #reset (animation)
+    #anim_reset (anim)
     {
-        if (!animation) return 0
-        const savedProgress = animation.progress()
-        animation.progress(0).kill()
-        return savedProgress
+        if (!anim) return 0
+        const progressValue = anim.progress()
+        anim.progress(0).kill()
+        return progressValue
     }
 
-    #render ()
+    #anim_render ()
     {
-        const prog = this.#reset(this.#rf.component.e.prog.anim)
-        const items = this.#rf.component.e.tag.self.querySelectorAll('[rf-component-self-selector]')
-        const width = parseInt(getComputedStyle(items[0]).width, 10)
-        const [xFrom, xTo] = this.#rf.component.e.opt.direction === 'left' ? [0, -width] : [-width, 0]
+        const { element: e } = this.#rf
 
-        this.#rf.component.e.prog.anim = gsap.fromTo(
-            items,
-            { x: xFrom },
+        e.prog.current = this.#anim_reset(e.prog.anim)
+
+        e.render.items = e.tag.self.querySelectorAll('[rf-component-self-selector]')
+        e.render.width = parseInt(getComputedStyle(e.render.items[0]).width, 10)
+
+        if (e.opt.direction === 'left') {
+            e.render.xFrom = 0
+            e.render.xTo = -e.render.width
+        } else {
+            e.render.xFrom = -e.render.width
+            e.render.xTo = 0
+        }
+
+        e.prog.anim = gsap.fromTo(
+            e.render.items,
+            { x: e.render.xFrom },
             {
-                x: xTo,
-                duration: this.#rf.component.e.opt.duration,
-                ease: this.#rf.component.e.opt.ease,
+                x: e.render.xTo,
+                duration: e.opt.duration,
+                ease: e.opt.ease,
                 repeat: -1,
             }
         )
-        this.#rf.component.e.prog.anim.progress(prog)
+        e.prog.anim.progress(e.prog.current)
     }
 
     create ()
     {
-        this.#render()
-        window.addEventListener('resize', () =>
-        {
-            clearTimeout(this.#rf.component.e.prog.time)
-            this.#rf.component.e.prog.time = setTimeout(() => this.#render(), this.#rf.component.e.prog.delay)
-        })
+        const { element: e } = this.#rf
+
+        e.tag.slider.setAttribute('rf-component-self-selector', '')
+        e.tag.self.append(e.tag.slider.cloneNode(true))
+        this.#anim_render()
+    }
+
+    reload ()
+    {
+        const { element: e } = this.#rf
+
+        clearTimeout(e.prog.time)
+        e.prog.time = setTimeout(() => this.#anim_render(), e.prog.delay)
+    }
+
+    destroy ()
+    {
+        const { element: e } = this.#rf
+
+        if (e.prog.anim) {
+            e.prog.anim.kill();
+            e.prog.anim = null;
+        }
+        clearTimeout(e.prog.time);
     }
 }
+
 
 class RF_Log
 {
@@ -186,6 +213,26 @@ class RF
             RF.#CACHE_CREDIT = true
         }
         RF_Log.log_success('Constructor', 'instance initialized.')
+    }
+
+    Worker = {
+        Icon_01: (config) => ({
+            work: () =>
+                RF.loadLibs([]).then(() =>
+                {
+                    new Marquee_01({
+                        tag: {
+                            self: e,
+                            slider: e.querySelector(`[${config.id.slider}]`),
+                        },
+                        opt: {
+                            ease: e.getAttribute(config.opt.ease),
+                            duration: parseFloat(e.getAttribute(config.opt.duration)),
+                            direction: e.getAttribute(config.opt.direction),
+                        },
+                    }).create()
+                }),
+        }),
     }
 
     Component = {
