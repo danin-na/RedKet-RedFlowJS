@@ -121,7 +121,6 @@ class Marquee_01
     }
 }
 
-
 class RF_Log
 {
     static log_error (n, m)
@@ -194,7 +193,7 @@ class RF
         }))
     }
 
-    static loadLibs (libs)
+    static #loadLibs (libs)
     {
         return Promise.all(
             libs.map((lib) =>
@@ -213,12 +212,20 @@ class RF
             RF.#CACHE_CREDIT = true
         }
         RF_Log.log_success('Constructor', 'instance initialized.')
+
+        this.marqueeInstances = []
+    }
+
+    // New method to reload all marquee instances
+    reloadMarquees ()
+    {
+        this.marqueeInstances.forEach(instance => instance.reload())
     }
 
     Worker = {
         Icon_01: (config) => ({
             work: () =>
-                RF.loadLibs([]).then(() =>
+                RF.#loadLibs([]).then(() =>
                 {
                     new Marquee_01({
                         tag: {
@@ -236,28 +243,37 @@ class RF
     }
 
     Component = {
-        Marquee_01: (config) => ({
-            create: () =>
-                RF.loadLibs(['gsap']).then(() =>
-                {
-                    document.querySelectorAll(`[${config.id.self}]`).forEach((e) =>
+        Marquee_01: (config) =>
+        {
+            // Capture the manager instance for later use.
+            const self = this
+            return {
+                create: () =>
+                    RF.#loadLibs(['gsap']).then(() =>
                     {
-                        new Marquee_01({
-                            tag: {
-                                self: e,
-                                slider: e.querySelector(`[${config.id.slider}]`),
-                            },
-                            opt: {
-                                ease: e.getAttribute(config.opt.ease),
-                                duration: parseFloat(e.getAttribute(config.opt.duration)),
-                                direction: e.getAttribute(config.opt.direction),
-                            },
-                        }).create()
-                    })
-                }),
-        }),
+                        document.querySelectorAll(`[${config.id.self}]`).forEach((e) =>
+                        {
+                            const instance = new Marquee_01({
+                                tag: {
+                                    self: e,
+                                    slider: e.querySelector(`[${config.id.slider}]`),
+                                },
+                                opt: {
+                                    ease: e.getAttribute(config.opt.ease),
+                                    duration: parseFloat(e.getAttribute(config.opt.duration)),
+                                    direction: e.getAttribute(config.opt.direction),
+                                },
+                            })
+                            instance.create()
+                            // Save the instance for later reloads.
+                            self.marqueeInstances.push(instance)
+                        })
+                    }),
+            }
+        },
     }
 }
+
 
 document.addEventListener('DOMContentLoaded', () =>
 {
