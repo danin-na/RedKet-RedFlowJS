@@ -27,56 +27,58 @@ class Icon_01
 
 class Marquee_01
 {
-    #rf = {
-        element: {
-            id: { self: null, slider: null },
-            tag: { self: null, slider: null },
-            opt: { ease: null, duration: null, direction: null },
-            prog: { delay: null, time: null, anim: null, current: null },
-            render: { items: null, width: null, xFrom: null, xTo: null },
-        },
+    #rf = { e: {} };
+
+    constructor({ tag, opt } = {})
+    {
+        this.#rf.e = {
+            tag: {
+                self: tag.self,
+                slider: tag.slider,
+            },
+            opt: {
+                ease: opt.ease || 'none',
+                duration: opt.duration || 30,
+                direction: opt.direction || 'left',
+            },
+            prog: {
+                currentProgress: 0,
+                delay: 200,
+                timer: null,
+                anim: null,
+            },
+            render: {
+                items: null,
+                width: 0,
+                xFrom: 0,
+                xTo: 0
+            },
+        };
     }
 
-    constructor(c = {})
+    #resetAnimation (anim)
     {
-        const { element: e } = this.#rf
-
-        e.tag.self = c.tag.self
-        e.tag.slider = c.tag.slider
-
-        e.opt.ease = c.opt.ease || 'none'
-        e.opt.duration = c.opt.duration || 30
-        e.opt.direction = c.opt.direction || 'left'
-
-        e.prog.current = 0
-        e.prog.delay = 200
-        e.prog.time = null
-        e.prog.anim = null
+        if (!anim) return 0;
+        const progress = anim.progress();
+        anim.progress(0).kill();
+        return progress;
     }
 
-    #anim_reset (anim)
+    #renderAnimation ()
     {
-        if (!anim) return 0
-        const progressValue = anim.progress()
-        anim.progress(0).kill()
-        return progressValue
-    }
+        const { e } = this.#rf;
 
-    #anim_render ()
-    {
-        const { element: e } = this.#rf
+        e.prog.currentProgress = this.#resetAnimation(e.prog.anim);
 
-        e.prog.current = this.#anim_reset(e.prog.anim)
-
-        e.render.items = e.tag.self.querySelectorAll('[rf-component-self-selector]')
-        e.render.width = parseInt(getComputedStyle(e.render.items[0]).width, 10)
+        e.render.items = e.tag.self.querySelectorAll('[rf-component-self-selector]');
+        e.render.width = parseInt(getComputedStyle(e.render.items[0]).width, 10);
 
         if (e.opt.direction === 'left') {
-            e.render.xFrom = 0
-            e.render.xTo = -e.render.width
+            e.render.xFrom = 0;
+            e.render.xTo = -e.render.width;
         } else {
-            e.render.xFrom = -e.render.width
-            e.render.xTo = 0
+            e.render.xFrom = -e.render.width;
+            e.render.xTo = 0;
         }
 
         e.prog.anim = gsap.fromTo(
@@ -88,36 +90,39 @@ class Marquee_01
                 ease: e.opt.ease,
                 repeat: -1,
             }
-        )
-        e.prog.anim.progress(e.prog.current)
+        );
+
+        e.prog.anim.progress(e.prog.currentProgress);
     }
 
     create ()
     {
-        const { element: e } = this.#rf
+        const { e } = this.#rf;
 
-        e.tag.slider.setAttribute('rf-component-self-selector', '')
-        e.tag.self.append(e.tag.slider.cloneNode(true))
-        this.#anim_render()
+        e.tag.slider.setAttribute('rf-component-self-selector', '');
+        e.tag.self.append(e.tag.slider.cloneNode(true));
+
+        this.#renderAnimation();
     }
 
     reload ()
     {
-        const { element: e } = this.#rf
+        const { e } = this.#rf;
 
-        clearTimeout(e.prog.time)
-        e.prog.time = setTimeout(() => this.#anim_render(), e.prog.delay)
+        clearTimeout(e.prog.timer);
+        e.prog.timer = setTimeout(() => this.#renderAnimation(), e.prog.delay);
     }
 
     destroy ()
     {
-        const { element: e } = this.#rf
+        const { e } = this.#rf;
 
         if (e.prog.anim) {
             e.prog.anim.kill();
             e.prog.anim = null;
         }
-        clearTimeout(e.prog.time);
+
+        clearTimeout(e.prog.timer);
     }
 }
 
@@ -212,14 +217,6 @@ class RF
             RF.#CACHE_CREDIT = true
         }
         RF_Log.log_success('Constructor', 'instance initialized.')
-
-        this.marqueeInstances = []
-    }
-
-    // New method to reload all marquee instances
-    reloadMarquees ()
-    {
-        this.marqueeInstances.forEach(instance => instance.reload())
     }
 
     Worker = {
@@ -243,34 +240,33 @@ class RF
     }
 
     Component = {
-        Marquee_01: (config) =>
+        Marquee_01:
         {
-            // Capture the manager instance for later use.
-            const self = this
-            return {
-                create: () =>
-                    RF.#loadLibs(['gsap']).then(() =>
+            create: (config) =>
+                RF.#loadLibs(['gsap']).then(() =>
+                {
+                    document.querySelectorAll(`[${config.id.self}]`).forEach((e) =>
                     {
-                        document.querySelectorAll(`[${config.id.self}]`).forEach((e) =>
-                        {
-                            const instance = new Marquee_01({
-                                tag: {
-                                    self: e,
-                                    slider: e.querySelector(`[${config.id.slider}]`),
-                                },
-                                opt: {
-                                    ease: e.getAttribute(config.opt.ease),
-                                    duration: parseFloat(e.getAttribute(config.opt.duration)),
-                                    direction: e.getAttribute(config.opt.direction),
-                                },
-                            })
-                            instance.create()
-                            // Save the instance for later reloads.
-                            self.marqueeInstances.push(instance)
+                        const instance = new Marquee_01({
+                            tag: {
+                                self: e,
+                                slider: e.querySelector(`[${config.id.slider}]`),
+                            },
+                            opt: {
+                                ease: e.getAttribute(config.opt.ease),
+                                duration: parseFloat(e.getAttribute(config.opt.duration)),
+                                direction: e.getAttribute(config.opt.direction),
+                            },
                         })
-                    }),
+                        instance.create()
+                    })
+                }),
+            reload: () =>
+            {
+                // EMPLMENT THIS FUNCTION LATER WHEN I ASK
             }
-        },
+        }
+
     }
 }
 
@@ -279,7 +275,7 @@ document.addEventListener('DOMContentLoaded', () =>
 {
     const RedFlow = new RF()
 
-    RedFlow.Component.Marquee_01({
+    RedFlow.Component.Marquee_01.create({
         id: {
             self: 'rf-component-e-id-self="marquee_01"',
             slider: 'rf-component-e-id-slider',
@@ -289,5 +285,7 @@ document.addEventListener('DOMContentLoaded', () =>
             duration: 'rf-component-e-opt-duration',
             direction: 'rf-component-e-opt-direction',
         },
-    }).create()
+    })
+
+    // WE WILL IMPLMENT HERE LATER TOO
 })
