@@ -5,7 +5,7 @@ class Icon_01
             t: {
                 tag: { icon: null },
                 opt: { source: null },
-            }
+            },
         },
     }
 
@@ -27,7 +27,7 @@ class Icon_01
 
 class Marquee_01
 {
-    #rf = { e: {} };
+    #rf = { e: {} }
 
     constructor({ tag, opt } = {})
     {
@@ -51,34 +51,34 @@ class Marquee_01
                 items: null,
                 width: 0,
                 xFrom: 0,
-                xTo: 0
+                xTo: 0,
             },
-        };
+        }
     }
 
     #resetAnimation (anim)
     {
-        if (!anim) return 0;
-        const progress = anim.progress();
-        anim.progress(0).kill();
-        return progress;
+        if (!anim) return 0
+        const progress = anim.progress()
+        anim.progress(0).kill()
+        return progress
     }
 
     #renderAnimation ()
     {
-        const { e } = this.#rf;
+        const { e } = this.#rf
 
-        e.prog.currentProgress = this.#resetAnimation(e.prog.anim);
+        e.prog.currentProgress = this.#resetAnimation(e.prog.anim)
 
-        e.render.items = e.tag.self.querySelectorAll('[rf-component-self-selector]');
-        e.render.width = parseInt(getComputedStyle(e.render.items[0]).width, 10);
+        e.render.items = e.tag.self.querySelectorAll('[rf-component-self-selector]')
+        e.render.width = parseInt(getComputedStyle(e.render.items[0]).width, 10)
 
         if (e.opt.direction === 'left') {
-            e.render.xFrom = 0;
-            e.render.xTo = -e.render.width;
+            e.render.xFrom = 0
+            e.render.xTo = -e.render.width
         } else {
-            e.render.xFrom = -e.render.width;
-            e.render.xTo = 0;
+            e.render.xFrom = -e.render.width
+            e.render.xTo = 0
         }
 
         e.prog.anim = gsap.fromTo(
@@ -90,56 +90,61 @@ class Marquee_01
                 ease: e.opt.ease,
                 repeat: -1,
             }
-        );
+        )
 
-        e.prog.anim.progress(e.prog.currentProgress);
+        e.prog.anim.progress(e.prog.currentProgress)
     }
 
     create ()
     {
-        const { e } = this.#rf;
+        const { e } = this.#rf
 
-        e.tag.slider.setAttribute('rf-component-self-selector', '');
-        e.tag.self.append(e.tag.slider.cloneNode(true));
+        e.tag.slider.setAttribute('rf-component-self-selector', '')
+        e.tag.self.append(e.tag.slider.cloneNode(true))
 
-        this.#renderAnimation();
+        this.#renderAnimation()
     }
 
     reload ()
     {
-        const { e } = this.#rf;
+        const { e } = this.#rf
 
-        clearTimeout(e.prog.timer);
-        e.prog.timer = setTimeout(() => this.#renderAnimation(), e.prog.delay);
+        clearTimeout(e.prog.timer)
+        e.prog.timer = setTimeout(() => this.#renderAnimation(), e.prog.delay)
     }
 
     destroy ()
     {
-        const { e } = this.#rf;
+        const { e } = this.#rf
 
         if (e.prog.anim) {
-            e.prog.anim.kill();
-            e.prog.anim = null;
+            e.prog.anim.kill()
+            e.prog.anim = null
         }
 
-        clearTimeout(e.prog.timer);
+        clearTimeout(e.prog.timer)
     }
 }
 
 class RF_Log
 {
-    static log_error (n, m)
+    static #_cacheCredit = false
+
+    constructor() { }
+
+    static error (n, m)
     {
         console.error(` 💢 ERROR → ⭕ RedFlow → ${n} → ${m}`)
     }
 
-    static log_success (n, m)
+    static success (n, m)
     {
         console.log(` ✅ SUCCESS → ⭕ RedFlow → ${n} → ${m}`)
     }
 
-    static log_credit ()
+    static credit ()
     {
+        if (RF_Log.#_cacheCredit) return
         document.body.insertAdjacentHTML(
             'afterbegin',
             `<!-- ⭕ RedFlow - Official Webflow Library by RedKet -- Copyright © 2025 RedKet. All rights reserved. -->
@@ -158,23 +163,22 @@ class RF_Log
             'color:#dfdfdf;background:#000;font-weight:bold;padding:2px 4px;border-radius:3px;',
             'color:#888;font-size:11px;'
         )
+        RF_Log.#_cacheCredit = true
     }
 }
 
-class RF
+class RF_Scripts
 {
-    static #CACHE_SCRIPT = {}
-    static #CACHE_CREDIT = false
+    static _CACHE_SCRIPT = {}
+    static _cdn_gsap = 'https://cdnjs.cloudflare.com/ajax/libs/gsap/3.6.1/gsap.min.js'
+    static _cdn_jquery = 'https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js'
 
-    static #cdn_gsap = 'https://cdnjs.cloudflare.com/ajax/libs/gsap/3.6.1/gsap.min.js'
-    static #cdn_jquary = 'https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js'
-
-    static #loadScript (u)
+    static loadScript (u)
     {
-        if (RF.#CACHE_SCRIPT[u]) return RF.#CACHE_SCRIPT[u]
+        if (RF_Scripts._CACHE_SCRIPT[u]) return RF_Scripts._CACHE_SCRIPT[u]
         if (document.querySelector(`script[src="${u}"]`)) {
-            RF.#CACHE_SCRIPT[u] = Promise.resolve()
-            return RF.#CACHE_SCRIPT[u]
+            RF_Scripts._CACHE_SCRIPT[u] = Promise.resolve()
+            return RF_Scripts._CACHE_SCRIPT[u]
         }
         if (!document.querySelector(`link[rel="preload"][href="${u}"]`)) {
             const link = document.createElement('link')
@@ -183,71 +187,50 @@ class RF
             link.as = 'script'
             document.head.appendChild(link)
         }
-        return (RF.#CACHE_SCRIPT[u] = new Promise((resolve, reject) =>
+        return (RF_Scripts._CACHE_SCRIPT[u] = new Promise((resolve, reject) =>
         {
             const script = document.createElement('script')
             script.src = u
             script.async = true
             script.onload = () => resolve()
-            script.onerror = () =>
-            {
-                RF_Log.log_error('loadScript', `Failed to load script: ${u}`)
-                reject(new Error(`Failed to load script: ${u}`))
-            }
+            script.onerror = () => reject(new Error(`Failed to load script: ${u}`))
             document.head.appendChild(script)
         }))
     }
 
-    static #loadLibs (libs)
+    static loadLibs (libs)
     {
         return Promise.all(
             libs.map((lib) =>
             {
-                if (lib === 'gsap') return RF.#loadScript(RF.#cdn_gsap)
-                if (lib === 'jquery') return RF.#loadScript(RF.#cdn_jquary)
+                if (lib === 'gsap') return RF_Scripts.loadScript(RF_Scripts._cdn_gsap)
+                if (lib === 'jquery') return RF_Scripts.loadScript(RF_Scripts._cdn_jquery)
                 return Promise.resolve()
             })
         )
     }
+}
 
+class RF
+{
     constructor()
     {
-        if (!RF.#CACHE_CREDIT) {
-            RF_Log.log_credit()
-            RF.#CACHE_CREDIT = true
-        }
-        RF_Log.log_success('Constructor', 'instance initialized.')
+        // Create a single logger instance
+        console.log('sss')
+        this.log = new RF_Log()
+        this.log.log_credit()
+        this.log.log_success('Constructor', 'instance initialized.')
     }
 
     Worker = {
         Icon_01: (config) => ({
             work: () =>
-                RF.#loadLibs([]).then(() =>
-                {
-                    new Marquee_01({
-                        tag: {
-                            self: e,
-                            slider: e.querySelector(`[${config.id.slider}]`),
-                        },
-                        opt: {
-                            ease: e.getAttribute(config.opt.ease),
-                            duration: parseFloat(e.getAttribute(config.opt.duration)),
-                            direction: e.getAttribute(config.opt.direction),
-                        },
-                    }).create()
-                }),
-        }),
-    }
-
-    Component = {
-        Marquee_01:
-        {
-            create: (config) =>
-                RF.#loadLibs(['gsap']).then(() =>
-                {
-                    document.querySelectorAll(`[${config.id.self}]`).forEach((e) =>
+            {
+                RF_Scripts.loadLibs([])
+                    .then(() =>
                     {
-                        const instance = new Marquee_01({
+                        // Assuming 'e' is defined in your context.
+                        new Marquee_01({
                             tag: {
                                 self: e,
                                 slider: e.querySelector(`[${config.id.slider}]`),
@@ -257,25 +240,67 @@ class RF
                                 duration: parseFloat(e.getAttribute(config.opt.duration)),
                                 direction: e.getAttribute(config.opt.direction),
                             },
-                        })
-                        instance.create()
+                        }).create()
+                        // Use the logger instance from RF manager
+                        this.log.log_success('Icon_01', 'work executed successfully.')
                     })
-                }),
-            reload: () =>
-            {
-                // EMPLMENT THIS FUNCTION LATER WHEN I ASK
-            }
-        }
+                    .catch((error) =>
+                    {
+                        this.log.log_error('Icon_01', error.message)
+                    })
+            },
+        }),
+    }
 
+    Component = {
+        Marquee_01: (config) =>
+        {
+            const instances = []
+            return {
+                create: () =>
+                {
+                    RF_Scripts.loadLibs(['gsap'])
+                        .then(() =>
+                        {
+                            document.querySelectorAll(`[${config.id.self}]`).forEach((e) =>
+                            {
+                                const marqueeInstance = new Marquee_01({
+                                    tag: {
+                                        self: e,
+                                        slider: e.querySelector(`[${config.id.slider}]`),
+                                    },
+                                    opt: {
+                                        ease: e.getAttribute(config.opt.ease),
+                                        duration: parseFloat(e.getAttribute(config.opt.duration)),
+                                        direction: e.getAttribute(config.opt.direction),
+                                    },
+                                })
+                                marqueeInstance.create()
+                                instances.push(marqueeInstance)
+                            })
+                            this.log.log_success('Marquee_01', 'Components created successfully.')
+                        })
+                        .catch((error) =>
+                        {
+                            this.log.log_error('Marquee_01', error.message)
+                        })
+                },
+                reload: () =>
+                {
+                    instances.forEach((instance) => instance.reload())
+                    this.log.log_success('Marquee_01', 'Components reloaded successfully.')
+                },
+            }
+        },
     }
 }
-
 
 document.addEventListener('DOMContentLoaded', () =>
 {
     const RedFlow = new RF()
+    const RedFlow2 = new RF()
 
-    RedFlow.Component.Marquee_01.create({
+    RedFlow.Component.Marquee_01({
         id: {
             self: 'rf-component-e-id-self="marquee_01"',
             slider: 'rf-component-e-id-slider',
@@ -285,7 +310,5 @@ document.addEventListener('DOMContentLoaded', () =>
             duration: 'rf-component-e-opt-duration',
             direction: 'rf-component-e-opt-direction',
         },
-    })
-
-    // WE WILL IMPLMENT HERE LATER TOO
+    }).create()
 })
