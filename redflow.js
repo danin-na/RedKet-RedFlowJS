@@ -167,54 +167,24 @@ class RF_Log
     constructor() { }
 }
 
-/**
- * RF_Lib is a utility class for dynamically loading external JavaScript libraries.
- * It caches loaded scripts to prevent duplicate loads and optimizes performance by preloading.
- */
 class RF_Lib
 {
-    /**
-     * A cache object to store promises for already loaded scripts.
-     * @type {Object<string, Promise<void>>}
-     * @private
-     */
     static #cacheScript = {};
-
-    /**
-     * The CDN URL for the GSAP library.
-     * @type {string}
-     * @private
-     */
     static #cdnGsap = 'https://cdnjs.cloudflare.com/ajax/libs/gsap/3.6.1/gsap.min.js';
-
-    /**
-     * The CDN URL for the jQuery library.
-     * @type {string}
-     * @private
-     */
     static #cdnJquery = 'https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js';
 
-    /**
-     * Dynamically loads a script from a given URL.
-     * If the script is already cached or exists in the document, returns the existing promise.
-     * Otherwise, it preloads the script and appends it to the document head.
-     *
-     * @param {string} u - The URL of the script to load.
-     * @returns {Promise<void>} A promise that resolves when the script is loaded.
-     * @private
-     */
-    #loadScript (u)
+    static #loadScript (u)
     {
-        // Return cached promise if the script is already being loaded or loaded.
+        // if script exist in cache
         if (RF_Lib.#cacheScript[u]) return RF_Lib.#cacheScript[u];
 
-        // If the script element already exists in the document, assume it's loaded.
+        // if script exist in html doc
         if (document.querySelector(`script[src="${u}"]`)) {
             RF_Lib.#cacheScript[u] = Promise.resolve();
             return RF_Lib.#cacheScript[u];
         }
 
-        // Preload the script if not already preloaded.
+        // preload the script
         if (!document.querySelector(`link[rel="preload"][href="${u}"]`)) {
             const link = document.createElement('link');
             link.rel = 'preload';
@@ -223,8 +193,8 @@ class RF_Lib
             document.head.appendChild(link);
         }
 
-        // Create and append the script element, caching the promise for future requests.
-        RF_Lib.#cacheScript[u] = new Promise((resolve, reject) =>
+        // create the script
+        return (RF_Lib.#cacheScript[u] = new Promise((resolve, reject) =>
         {
             const script = document.createElement('script');
             script.src = u;
@@ -232,45 +202,35 @@ class RF_Lib
             script.onload = () => resolve();
             script.onerror = () => reject(new Error(`Failed to load script: ${u}`));
             document.head.appendChild(script);
-        });
-        return RF_Lib.#cacheScript[u];
+        }));
     }
 
-    /**
-     * Loads multiple libraries specified by an array of library names.
-     * Currently supported libraries are 'gsap' and 'jquery'.
-     *
-     * @param {Array<string>} libs - An array of library names to load.
-     * @returns {Promise<Array<void>>} A promise that resolves when all requested libraries are loaded.
-     */
-    loadLibs (libs)
+    static loadLibs (libs)
     {
         return Promise.all(
             libs.map((lib) =>
             {
-                if (lib === 'gsap') return this.#loadScript(RF_Lib.#cdnGsap);
-                if (lib === 'jquery') return this.#loadScript(RF_Lib.#cdnJquery);
-                // For unsupported libraries, simply resolve immediately.
+                if (lib === 'gsap') return RF_Lib.#loadScript(RF_Lib.#cdnGsap);
+                if (lib === 'jquery') return RF_Lib.#loadScript(RF_Lib.#cdnJquery);
                 return Promise.resolve();
             })
         );
     }
+
+    constructor() { }
 }
 
 
-
-const ss = new RF_Lib()
-ss.
-
 class RF
 {
+
+    static #log = new RF_Log()
+    static #lib = new RF_Lib()
+
     constructor()
     {
-        // Create a single logger instance
-        console.log('sss')
-        //this.log = new RF_Log()
-        this.log.log_credit()
-        this.log.log_success('Constructor', 'instance initialized.')
+        RF.#log.Credit()
+        RF.#log.Success('Constructor', 'instance initialized.')
     }
 
     Worker = {
