@@ -31,20 +31,15 @@ class Marquee_01
 
     constructor({ tag, opt } = {})
     {
-        e_tag_Self
-        e_tag_Slider
-        e_opt_ease
-        e_opt_duration
-
         this.#rf.e = {
             tag: {
                 self: tag.self,
                 slider: tag.slider,
             },
             opt: {
-                ease: opt.ease || "none",
+                ease: opt.ease || 'none',
                 duration: opt.duration || 30,
-                direction: opt.direction || "left",
+                direction: opt.direction || 'left',
             },
             prog: {
                 currentProgress: 0,
@@ -75,10 +70,10 @@ class Marquee_01
 
         e.prog.currentProgress = this.#resetAnimation(e.prog.anim)
 
-        e.render.items = e.tag.self.querySelectorAll("[rf-component-self-selector]")
+        e.render.items = e.tag.self.querySelectorAll('[rf-component-self-selector]')
         e.render.width = parseInt(getComputedStyle(e.render.items[0]).width, 10)
 
-        if (e.opt.direction === "left") {
+        if (e.opt.direction === 'left') {
             e.render.xFrom = 0
             e.render.xTo = -e.render.width
         } else {
@@ -104,7 +99,7 @@ class Marquee_01
     {
         const { e } = this.#rf
 
-        e.tag.slider.setAttribute("rf-component-self-selector", "")
+        e.tag.slider.setAttribute('rf-component-self-selector', '')
         e.tag.self.append(e.tag.slider.cloneNode(true))
 
         this.#renderAnimation()
@@ -131,48 +126,45 @@ class Marquee_01
     }
 }
 
-
-
-
-
-
 const rf = (() =>
 {
     function log ()
     {
         class Log
         {
-            static #cacheCredit = false;
+            static #cacheCredit = false
 
             static credit = () =>
             {
-                if (Log.#cacheCredit) return;
-                document.body.insertAdjacentHTML(
-                    "afterbegin",
-                    `<!-- ⭕ RedFlow - Official Webflow Library by RedKet -- Copyright © 2025 RedKet. All rights reserved. -->
-         <!-- Unauthorized copying, modification, or distribution is prohibited. -- Visit: www.RedKet.com | www.Red.Ket -->`
-                )
-                document.body.insertAdjacentHTML(
-                    "beforeend",
-                    `<!-- ⭕ RedFlow | OFFICIAL WEBFLOW LIBRARY BY REDKET © 2025 REDKET | WWW.REDKET.COM | WWW.RED.KET -->`
-                )
-                console.log(
-                    "%cRed%cFlow%c - Official Webflow Library by %cRed%cKet%c\nCopyright © 2025 RedKet. All rights reserved.\nUnauthorized copying, modification, or distribution is prohibited.\nVisit: www.RedKet.com | www.Red.Ket",
-                    "color:#c33; background:#000; font-weight:bold; padding:2px 4px; border-radius:3px;",
-                    "color:#dfdfdf; background:#000; font-weight:bold; padding:2px 4px; border-radius:3px;",
-                    "color:#aaa; background:#000; padding:2px 4px; border-radius:3px;",
-                    "color:#c33; background:#000; font-weight:bold; padding:2px 4px; border-radius:3px;",
-                    "color:#dfdfdf; background:#000; font-weight:bold; padding:2px 4px; border-radius:3px;",
-                    "color:#888; font-size:11px;"
-                )
-                Log.#cacheCredit = true;
-            };
+                if (Log.#cacheCredit) return
 
-            static error = console.error.bind(console, "💢 ERROR → ⭕ RedFlow →");
-            static success = console.log.bind(console, "✅ SUCCESS → ⭕ RedFlow →");
-            static info = console.info.bind(console, "❔ INFO → ⭕ RedFlow →");
-            static warn = console.warn.bind(console, "⚠️ WARN → ⭕ RedFlow →");
-            static debug = console.debug.bind(console, "🐞 DEBUG → ⭕ RedFlow →");
+                const commentTop = document.createComment(
+                    '⭕ RedFlow - Official Webflow Library by RedKet © 2025 RedKet. All rights reserved. Unauthorized copying, modification, or distribution is prohibited. Visit: www.RedKet.com | www.Red.Ket'
+                )
+                const commentBottom = document.createComment(
+                    '⭕ RedFlow | OFFICIAL WEBFLOW LIBRARY BY REDKET © 2025 REDKET | WWW.REDKET.COM | WWW.RED.KET'
+                )
+
+                document.body.prepend(commentTop)
+                document.body.appendChild(commentBottom)
+
+                console.log(
+                    '%cRed%cFlow%c - Official Webflow Library by %cRed%cKet%c\nCopyright © 2025 RedKet. All rights reserved.\nUnauthorized copying, modification, or distribution is prohibited.\nVisit: www.RedKet.com | www.Red.Ket',
+                    'color:#c33; background:#000; font-weight:bold; padding:2px 4px; border-radius:3px;',
+                    'color:#dfdfdf; background:#000; font-weight:bold; padding:2px 4px; border-radius:3px;',
+                    'color:#aaa; background:#000; padding:2px 4px; border-radius:3px;',
+                    'color:#c33; background:#000; font-weight:bold; padding:2px 4px; border-radius:3px;',
+                    'color:#dfdfdf; background:#000; font-weight:bold; padding:2px 4px; border-radius:3px;',
+                    'color:#888; font-size:11px;'
+                )
+                Log.#cacheCredit = true
+            }
+
+            static error = console.error.bind(console, '💢 ERROR → ⭕ RedFlow →')
+            static success = console.log.bind(console, '✅ SUCCESS → ⭕ RedFlow →')
+            static info = console.info.bind(console, '❔ INFO → ⭕ RedFlow →')
+            static warn = console.warn.bind(console, '⚠️ WARN → ⭕ RedFlow →')
+            static debug = console.debug.bind(console, '🐞 DEBUG → ⭕ RedFlow →')
         }
 
         return {
@@ -182,169 +174,173 @@ const rf = (() =>
             info: Log.info,
             warn: Log.warn,
             debug: Log.debug,
-        };
-    }
-
-    return { Log: log() };
-})();
-
-
-
-
-
-
-class RF_Lib
-{
-    static #cacheScript = {}
-    static #cdnGsap = "https://cdnjs.cloudflare.com/ajax/libs/gsap/3.6.1/gsap.min.js"
-    static #cdnJquery = "https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"
-
-    static #script (u)
-    {
-        // if script exist in cache
-        if (RF_Lib.#cacheScript[u]) return RF_Lib.#cacheScript[u]
-
-        // if script exist in html doc
-        if (document.querySelector(`script[src="${u}"]`)) {
-            RF_Lib.#cacheScript[u] = Promise.resolve()
-            return RF_Lib.#cacheScript[u]
         }
-
-        // preload the script
-        if (!document.querySelector(`link[rel="preload"][href="${u}"]`)) {
-            const link = document.createElement("link")
-            link.rel = "preload"
-            link.href = u
-            link.as = "script"
-            document.head.appendChild(link)
-        }
-
-        // create the script
-        return (RF_Lib.#cacheScript[u] = new Promise((resolve, reject) =>
-        {
-            const script = document.createElement("script")
-            script.src = u
-            script.async = true
-            script.onload = () => resolve()
-            script.onerror = () => reject(new Error(`Failed to load script: ${u}`))
-            document.head.appendChild(script)
-        }))
     }
 
-    load (libs)
+    function lib ()
     {
-        return Promise.all(
-            libs.map((lib) =>
-            {
-                if (lib === "gsap") return RF_Lib.#script(RF_Lib.#cdnGsap)
-                if (lib === "jquery") return RF_Lib.#script(RF_Lib.#cdnJquery)
-                return Promise.resolve()
-            })
-        )
-    }
-
-    constructor() { }
-}
-
-class RF
-{
-    static #log = new RFLog()
-    static #lib = new RF_Lib()
-
-    constructor()
-    {
-        RFLog.RF.#log.RF.#log.success("Constructor", "instance initialized.")
-    }
-
-    Worker = {
-        Icon_01: (config) => ({
-            work: () =>
-            {
-                RF.#lib
-                    .load([])
-                    .then(() =>
-                    {
-                        // Assuming 'e' is defined in your context.
-                        new Marquee_01({
-                            tag: {
-                                self: e,
-                                slider: e.querySelector(`[${config.id.slider}]`),
-                            },
-                            opt: {
-                                ease: e.getAttribute(config.opt.ease),
-                                duration: parseFloat(e.getAttribute(config.opt.duration)),
-                                direction: e.getAttribute(config.opt.direction),
-                            },
-                        }).create()
-                        // Use the logger instance from RF manager
-                        RF.#log.success("Icon_01", "work executed successfully.")
-                    })
-                    .catch((error) =>
-                    {
-                        RF.#log.error("Icon_01", error.message)
-                    })
-            },
-        }),
-    }
-
-    Component = {
-        Marquee_01: (config) =>
+        class Lib
         {
-            const instances = []
-            return {
-                create: () =>
+            static #cacheScript = {}
+            static #cdnGsap = 'https://cdnjs.cloudflare.com/ajax/libs/gsap/3.6.1/gsap.min.js'
+            static #cdnJquery = 'https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js'
+
+            static #script (u)
+            {
+                // if script exist in cache
+                if (Lib.#cacheScript[u]) return Lib.#cacheScript[u]
+
+                // if script exist in html doc
+                if (document.querySelector(`script[src="${u}"]`)) {
+                    Lib.#cacheScript[u] = Promise.resolve()
+                    return Lib.#cacheScript[u]
+                }
+
+                // preload the script
+                if (!document.querySelector(`link[rel="preload"][href="${u}"]`)) {
+                    const link = document.createElement('link')
+                    link.rel = 'preload'
+                    link.href = u
+                    link.as = 'script'
+                    document.head.appendChild(link)
+                }
+
+                // create the script
+                return (Lib.#cacheScript[u] = new Promise((resolve, reject) =>
                 {
-                    RF.#lib
-                        .load(["gsap"])
+                    const script = document.createElement('script')
+                    script.src = u
+                    script.async = true
+                    script.onload = () => resolve()
+                    script.onerror = () => reject(new Error(`Failed to load script: ${u}`))
+                    document.head.appendChild(script)
+                }))
+            }
+
+            static load (libs)
+            {
+                return Promise.all(
+                    libs.map((lib) =>
+                    {
+                        if (lib === 'gsap') return Lib.#script(Lib.#cdnGsap)
+                        if (lib === 'jquery') return Lib.#script(Lib.#cdnJquery)
+                        return Promise.resolve()
+                    })
+                )
+            }
+        }
+
+        return {
+            load: Lib.load,
+        }
+    }
+
+    return { Log: log(), Lib: lib() }
+})()
+
+const RF = (() =>
+{
+    rf.Log.credit()
+    rf.Log.success('Constructor', 'RF instance initialized.')
+
+    return {
+        Worker: {
+            Icon_01: (config) => ({
+                work: () =>
+                {
+                    // Ensure that 'e' is defined in your context or passed as needed.
+                    rf.Lib.load([])
                         .then(() =>
                         {
-                            document.querySelectorAll(`[${config.id.self}]`).forEach((e) =>
-                            {
-                                const marqueeInstance = new Marquee_01({
-                                    tag: {
-                                        self: e,
-                                        slider: e.querySelector(`[${config.id.slider}]`),
-                                    },
-                                    opt: {
-                                        ease: e.getAttribute(config.opt.ease),
-                                        duration: parseFloat(e.getAttribute(config.opt.duration)),
-                                        direction: e.getAttribute(config.opt.direction),
-                                    },
-                                })
-                                marqueeInstance.create()
-                                instances.push(marqueeInstance)
-                            })
-                            RF.#log.success("Marquee_01", "Components created successfully.")
+                            new Marquee_01({
+                                tag: {
+                                    self: e,
+                                    slider: e.querySelector(`[${config.id.slider}]`),
+                                },
+                                opt: {
+                                    ease: e.getAttribute(config.opt.ease),
+                                    duration: parseFloat(e.getAttribute(config.opt.duration)),
+                                    direction: e.getAttribute(config.opt.direction),
+                                },
+                            }).create()
+
+                            // Use the logger instance from rf for success logging
+                            rf.Log.success('Icon_01', 'work executed successfully.')
                         })
                         .catch((error) =>
                         {
-                            RF.#log.error("Marquee_01", error.message)
+                            rf.Log.error('Icon_01', error.message)
                         })
                 },
-                reload: () =>
-                {
-                    instances.forEach((instance) => instance.reload())
-                    RF.#log.success("Marquee_01", "Components reloaded successfully.")
-                },
-            }
+            }),
+        },
+
+        Component: {
+            Marquee_01: (config) =>
+            {
+                const instances = []
+                return {
+                    create: () =>
+                    {
+                        rf.Lib.load(['gsap'])
+                            .then(() =>
+                            {
+                                document.querySelectorAll(`[${config.id.self}]`).forEach((e) =>
+                                {
+                                    const marqueeInstance = new Marquee_01({
+                                        tag: {
+                                            self: e,
+                                            slider: e.querySelector(`[${config.id.slider}]`),
+                                        },
+                                        opt: {
+                                            ease: e.getAttribute(config.opt.ease),
+                                            duration: parseFloat(e.getAttribute(config.opt.duration)),
+                                            direction: e.getAttribute(config.opt.direction),
+                                        },
+                                    })
+                                    marqueeInstance.create()
+                                    instances.push(marqueeInstance)
+                                })
+                                rf.Log.success('Marquee_01', 'Components created successfully.')
+                            })
+                            .catch((error) =>
+                            {
+                                rf.Log.error('Marquee_01', error.message)
+                            })
+                    },
+                    reload: () =>
+                    {
+                        instances.forEach((instance) => instance.reload())
+                        rf.Log.success('Marquee_01', 'Components reloaded successfully.')
+                    },
+                }
+            },
         },
     }
-}
+})()
 
-document.addEventListener("DOMContentLoaded", () =>
+document.addEventListener('DOMContentLoaded', () =>
 {
-    const RedFlow = new RF()
-    const RedFlow2 = new RF()
+    // Create the Marquee component instance
 
-    RedFlow.Component.Marquee_01({
+    const marqueeComponent = RF.Component.Marquee_01({
         id: {
             self: 'rf-component-e-id-self="marquee_01"',
-            slider: "rf-component-e-id-slider",
+            slider: 'rf-component-e-id-slider',
         },
         opt: {
-            ease: "rf-component-e-opt-ease",
-            duration: "rf-component-e-opt-duration",
-            direction: "rf-component-e-opt-direction",
+            ease: 'rf-component-e-opt-ease',
+            duration: 'rf-component-e-opt-duration',
+            direction: 'rf-component-e-opt-direction',
         },
-    }).create()
+    })
+
+    // Create the marquee components
+    marqueeComponent.create()
+
+    // Add a listener for window resize to reload the marquee components
+    window.addEventListener('resize', () =>
+    {
+        marqueeComponent.reload()
+    })
 })
