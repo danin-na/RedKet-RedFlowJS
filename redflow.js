@@ -25,110 +25,117 @@ class Icon_01
     }
 }
 
-class Marquee_01
+/* -------------------------------------------------------------------------- */
+/*                                   RedFlow                                  */
+/* -------------------------------------------------------------------------- */
+
+const RF = (() =>
 {
-    #rf = { e: {} }
-
-    constructor({ tag, opt } = {})
+    class Marquee_01
     {
-        this.#rf.e = {
-            tag: {
-                self: tag.self,
-                slider: tag.slider,
-            },
-            opt: {
-                ease: opt.ease || 'none',
-                duration: opt.duration || 30,
-                direction: opt.direction || 'left',
-            },
-            prog: {
-                currentProgress: 0,
-                delay: 200,
-                timer: null,
-                anim: null,
-            },
-            render: {
-                items: null,
-                width: 0,
-                xFrom: 0,
-                xTo: 0,
-            },
-        }
-    }
+        #rf = { e: {} }
 
-    #resetAnimation (anim)
-    {
-        if (!anim) return 0
-        const progress = anim.progress()
-        anim.progress(0).kill()
-        return progress
-    }
-
-    #renderAnimation ()
-    {
-        const { e } = this.#rf
-
-        e.prog.currentProgress = this.#resetAnimation(e.prog.anim)
-
-        e.render.items = e.tag.self.querySelectorAll('[rf-component-self-selector]')
-        e.render.width = parseInt(getComputedStyle(e.render.items[0]).width, 10)
-
-        if (e.opt.direction === 'left') {
-            e.render.xFrom = 0
-            e.render.xTo = -e.render.width
-        } else {
-            e.render.xFrom = -e.render.width
-            e.render.xTo = 0
-        }
-
-        e.prog.anim = gsap.fromTo(
-            e.render.items,
-            { x: e.render.xFrom },
-            {
-                x: e.render.xTo,
-                duration: e.opt.duration,
-                ease: e.opt.ease,
-                repeat: -1,
+        constructor({ tag, opt } = {})
+        {
+            this.#rf.e = {
+                tag: {
+                    self: tag.self,
+                    slider: tag.slider,
+                },
+                opt: {
+                    ease: opt.ease || 'none',
+                    duration: opt.duration || 30,
+                    direction: opt.direction || 'left',
+                },
+                prog: {
+                    currentProgress: 0,
+                    delay: 200,
+                    timer: null,
+                    anim: null,
+                },
+                render: {
+                    items: null,
+                    width: 0,
+                    xFrom: 0,
+                    xTo: 0,
+                },
             }
-        )
-
-        e.prog.anim.progress(e.prog.currentProgress)
-    }
-
-    create ()
-    {
-        const { e } = this.#rf
-
-        e.tag.slider.setAttribute('rf-component-self-selector', '')
-        e.tag.self.append(e.tag.slider.cloneNode(true))
-
-        this.#renderAnimation()
-    }
-
-    reload ()
-    {
-        const { e } = this.#rf
-
-        clearTimeout(e.prog.timer)
-        e.prog.timer = setTimeout(() => this.#renderAnimation(), e.prog.delay)
-    }
-
-    destroy ()
-    {
-        const { e } = this.#rf
-
-        if (e.prog.anim) {
-            e.prog.anim.kill()
-            e.prog.anim = null
         }
 
-        clearTimeout(e.prog.timer)
-    }
-}
+        #resetAnimation (anim)
+        {
+            if (!anim) return 0
+            const progress = anim.progress()
+            anim.progress(0).kill()
+            return progress
+        }
 
-const rf = (() =>
-{
-    function log ()
+        #renderAnimation ()
+        {
+            const { e } = this.#rf
+
+            e.prog.currentProgress = this.#resetAnimation(e.prog.anim)
+
+            e.render.items = e.tag.self.querySelectorAll('[rf-component-self-selector]')
+            e.render.width = parseInt(getComputedStyle(e.render.items[0]).width, 10)
+
+            if (e.opt.direction === 'left') {
+                e.render.xFrom = 0
+                e.render.xTo = -e.render.width
+            } else {
+                e.render.xFrom = -e.render.width
+                e.render.xTo = 0
+            }
+
+            e.prog.anim = gsap.fromTo(
+                e.render.items,
+                { x: e.render.xFrom },
+                {
+                    x: e.render.xTo,
+                    duration: e.opt.duration,
+                    ease: e.opt.ease,
+                    repeat: -1,
+                }
+            )
+
+            e.prog.anim.progress(e.prog.currentProgress)
+        }
+
+        create ()
+        {
+            const { e } = this.#rf
+
+            e.tag.slider.setAttribute('rf-component-self-selector', '')
+            e.tag.self.append(e.tag.slider.cloneNode(true))
+
+            this.#renderAnimation()
+        }
+
+        reload ()
+        {
+            const { e } = this.#rf
+
+            clearTimeout(e.prog.timer)
+            e.prog.timer = setTimeout(() => this.#renderAnimation(), e.prog.delay)
+        }
+
+        destroy ()
+        {
+            const { e } = this.#rf
+
+            if (e.prog.anim) {
+                e.prog.anim.kill()
+                e.prog.anim = null
+            }
+
+            clearTimeout(e.prog.timer)
+        }
+    }
+
+    /* -------------------------------------------------------------------------- */
+    /* ------------------------------ Log Function ------------------------------ */
+    /* -------------------------------------------------------------------------- */
+    const log = (() =>
     {
         class Log
         {
@@ -175,9 +182,13 @@ const rf = (() =>
             warn: Log.warn,
             debug: Log.debug,
         }
-    }
+    })()
 
-    function lib ()
+    /* -------------------------------------------------------------------------- */
+    /* ------------------------------ Lib Function ------------------------------ */
+    /* -------------------------------------------------------------------------- */
+
+    const lib = (() =>
     {
         class Lib
         {
@@ -187,16 +198,13 @@ const rf = (() =>
 
             static #script (u)
             {
-                // if script exist in cache
                 if (Lib.#cacheScript[u]) return Lib.#cacheScript[u]
 
-                // if script exist in html doc
                 if (document.querySelector(`script[src="${u}"]`)) {
                     Lib.#cacheScript[u] = Promise.resolve()
                     return Lib.#cacheScript[u]
                 }
 
-                // preload the script
                 if (!document.querySelector(`link[rel="preload"][href="${u}"]`)) {
                     const link = document.createElement('link')
                     link.rel = 'preload'
@@ -205,7 +213,6 @@ const rf = (() =>
                     document.head.appendChild(link)
                 }
 
-                // create the script
                 return (Lib.#cacheScript[u] = new Promise((resolve, reject) =>
                 {
                     const script = document.createElement('script')
@@ -233,48 +240,16 @@ const rf = (() =>
         return {
             load: Lib.load,
         }
-    }
+    })()
 
-    return { Log: log(), Lib: lib() }
-})()
+    /* -------------------------------------------------------------------------- */
+    //
+    /* -------------------------------------------------------------------------- */
 
-const RF = (() =>
-{
-    rf.Log.credit()
-    rf.Log.success('Constructor', 'RF instance initialized.')
+    log.credit()
+    log.success('Constructor', 'RF instance initialized.')
 
     return {
-        Worker: {
-            Icon_01: (config) => ({
-                work: () =>
-                {
-                    // Ensure that 'e' is defined in your context or passed as needed.
-                    rf.Lib.load([])
-                        .then(() =>
-                        {
-                            new Marquee_01({
-                                tag: {
-                                    self: e,
-                                    slider: e.querySelector(`[${config.id.slider}]`),
-                                },
-                                opt: {
-                                    ease: e.getAttribute(config.opt.ease),
-                                    duration: parseFloat(e.getAttribute(config.opt.duration)),
-                                    direction: e.getAttribute(config.opt.direction),
-                                },
-                            }).create()
-
-                            // Use the logger instance from rf for success logging
-                            rf.Log.success('Icon_01', 'work executed successfully.')
-                        })
-                        .catch((error) =>
-                        {
-                            rf.Log.error('Icon_01', error.message)
-                        })
-                },
-            }),
-        },
-
         Component: {
             Marquee_01: (config) =>
             {
@@ -282,7 +257,8 @@ const RF = (() =>
                 return {
                     create: () =>
                     {
-                        rf.Lib.load(['gsap'])
+                        lib
+                            .load(['gsap'])
                             .then(() =>
                             {
                                 document.querySelectorAll(`[${config.id.self}]`).forEach((e) =>
@@ -301,17 +277,17 @@ const RF = (() =>
                                     marqueeInstance.create()
                                     instances.push(marqueeInstance)
                                 })
-                                rf.Log.success('Marquee_01', 'Components created successfully.')
+                                log.success('Marquee_01', 'Components created successfully.')
                             })
                             .catch((error) =>
                             {
-                                rf.Log.error('Marquee_01', error.message)
+                                log.error('Marquee_01', error.message)
                             })
                     },
                     reload: () =>
                     {
                         instances.forEach((instance) => instance.reload())
-                        rf.Log.success('Marquee_01', 'Components reloaded successfully.')
+                        log.success('Marquee_01', 'Components reloaded successfully.')
                     },
                 }
             },
