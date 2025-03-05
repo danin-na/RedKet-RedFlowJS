@@ -31,117 +31,17 @@ class Icon_01
 
 const RF = (() =>
 {
-    class Marquee_01
-    {
-        #rf = { e: {} }
-
-        constructor({ tag, opt } = {})
-        {
-            this.#rf.e = {
-                tag: {
-                    self: tag.self,
-                    slider: tag.slider,
-                },
-                opt: {
-                    ease: opt.ease || 'none',
-                    duration: opt.duration || 30,
-                    direction: opt.direction || 'left',
-                },
-                prog: {
-                    currentProgress: 0,
-                    delay: 200,
-                    timer: null,
-                    anim: null,
-                },
-                render: {
-                    items: null,
-                    width: 0,
-                    xFrom: 0,
-                    xTo: 0,
-                },
-            }
-        }
-
-        #resetAnimation (anim)
-        {
-            if (!anim) return 0
-            const progress = anim.progress()
-            anim.progress(0).kill()
-            return progress
-        }
-
-        #renderAnimation ()
-        {
-            const { e } = this.#rf
-
-            e.prog.currentProgress = this.#resetAnimation(e.prog.anim)
-
-            e.render.items = e.tag.self.querySelectorAll('[rf-component-self-selector]')
-            e.render.width = parseInt(getComputedStyle(e.render.items[0]).width, 10)
-
-            if (e.opt.direction === 'left') {
-                e.render.xFrom = 0
-                e.render.xTo = -e.render.width
-            } else {
-                e.render.xFrom = -e.render.width
-                e.render.xTo = 0
-            }
-
-            e.prog.anim = gsap.fromTo(
-                e.render.items,
-                { x: e.render.xFrom },
-                {
-                    x: e.render.xTo,
-                    duration: e.opt.duration,
-                    ease: e.opt.ease,
-                    repeat: -1,
-                }
-            )
-
-            e.prog.anim.progress(e.prog.currentProgress)
-        }
-
-        create ()
-        {
-            const { e } = this.#rf
-
-            e.tag.slider.setAttribute('rf-component-self-selector', '')
-            e.tag.self.append(e.tag.slider.cloneNode(true))
-
-            this.#renderAnimation()
-        }
-
-        reload ()
-        {
-            const { e } = this.#rf
-
-            clearTimeout(e.prog.timer)
-            e.prog.timer = setTimeout(() => this.#renderAnimation(), e.prog.delay)
-        }
-
-        destroy ()
-        {
-            const { e } = this.#rf
-
-            if (e.prog.anim) {
-                e.prog.anim.kill()
-                e.prog.anim = null
-            }
-
-            clearTimeout(e.prog.timer)
-        }
-    }
 
     /* -------------------------------------------------------------------------- */
     /* ------------------------------ Log Function ------------------------------ */
     /* -------------------------------------------------------------------------- */
     const log = (() =>
     {
-        class Log
+        return class Log
         {
             static #cacheCredit = false
 
-            static credit = () =>
+            static Credit ()
             {
                 if (Log.#cacheCredit) return
 
@@ -167,21 +67,13 @@ const RF = (() =>
                 Log.#cacheCredit = true
             }
 
-            static error = console.error.bind(console, '💢 ERROR → ⭕ RedFlow →')
-            static success = console.log.bind(console, '✅ SUCCESS → ⭕ RedFlow →')
-            static info = console.info.bind(console, '❔ INFO → ⭕ RedFlow →')
-            static warn = console.warn.bind(console, '⚠️ WARN → ⭕ RedFlow →')
-            static debug = console.debug.bind(console, '🐞 DEBUG → ⭕ RedFlow →')
+            static Error (contex, message) { console.error('💢 ERROR → ⭕ RedFlow →', contex, message) }
+            static Succ (contex, message) { console.log('✅ SUCCESS → ⭕ RedFlow →', contex, message) }
+            static Info (contex, message) { console.info('❔ INFO → ⭕ RedFlow →', contex, message) }
+            static Warn (contex, message) { console.warn('⚠️ WARN → ⭕ RedFlow →', contex, message) }
+            static Debug (contex, message) { console.debug('🐞 DEBUG → ⭕ RedFlow →', contex, message) }
         }
 
-        return {
-            credit: Log.credit,
-            error: Log.error,
-            success: Log.success,
-            info: Log.info,
-            warn: Log.warn,
-            debug: Log.debug,
-        }
     })()
 
     /* -------------------------------------------------------------------------- */
@@ -190,7 +82,7 @@ const RF = (() =>
 
     const lib = (() =>
     {
-        class Lib
+        return class Lib
         {
             static #cacheScript = {}
             static #cdnGsap = 'https://cdnjs.cloudflare.com/ajax/libs/gsap/3.6.1/gsap.min.js'
@@ -213,86 +105,152 @@ const RF = (() =>
                     document.head.appendChild(link)
                 }
 
-                return (Lib.#cacheScript[u] = new Promise((resolve, reject) =>
+                return (Lib.#cacheScript[u] = new Promise((resolve) =>
                 {
                     const script = document.createElement('script')
                     script.src = u
-                    script.async = true
-                    script.onload = () => resolve()
-                    script.onerror = () => reject(new Error(`Failed to load script: ${u}`))
+                    script.defer = true // Ensures scripts execute in order
+                    script.onload = () =>
+                    {
+                        log.Succ('Lib', `✅ Loaded: ${u}`)
+                        resolve()
+                    }
+                    script.onerror = () =>
+                    {
+                        log.Error('Lib', `❌ Failed to load script: ${u}`)
+                        resolve() // Resolve to prevent promise rejection outside scope
+                    }
                     document.head.appendChild(script)
                 }))
             }
 
-            static load (libs)
+            static Load (libs)
             {
                 return Promise.all(
                     libs.map((lib) =>
                     {
                         if (lib === 'gsap') return Lib.#script(Lib.#cdnGsap)
                         if (lib === 'jquery') return Lib.#script(Lib.#cdnJquery)
-                        return Promise.resolve()
+                        if (lib.startsWith('http')) return Lib.#script(lib) // Allow direct URL input
+                        log.Warn('Lib', `⚠️ Unknown library requested: ${lib}`)
+                        return Promise.resolve() // Resolve instead of rejecting
                     })
                 )
             }
         }
 
-        return {
-            load: Lib.load,
-        }
-    })()
+    })();
 
     /* -------------------------------------------------------------------------- */
-    //
+    /* ------------------------------- Components ------------------------------- */
     /* -------------------------------------------------------------------------- */
 
-    log.credit()
-    log.success('Constructor', 'RF instance initialized.')
+    const comp = (() =>
+    {
+        class Marquee_01
+        {
+            #rf = { e: {} }
 
-    return {
-        Component: {
-            Marquee_01: (config) =>
+            constructor({ tag, opt } = {})
             {
-                const instances = []
-                return {
-                    create: () =>
-                    {
-                        lib
-                            .load(['gsap'])
-                            .then(() =>
-                            {
-                                document.querySelectorAll(`[${config.id.self}]`).forEach((e) =>
-                                {
-                                    const marqueeInstance = new Marquee_01({
-                                        tag: {
-                                            self: e,
-                                            slider: e.querySelector(`[${config.id.slider}]`),
-                                        },
-                                        opt: {
-                                            ease: e.getAttribute(config.opt.ease),
-                                            duration: parseFloat(e.getAttribute(config.opt.duration)),
-                                            direction: e.getAttribute(config.opt.direction),
-                                        },
-                                    })
-                                    marqueeInstance.create()
-                                    instances.push(marqueeInstance)
-                                })
-                                log.success('Marquee_01', 'Components created successfully.')
-                            })
-                            .catch((error) =>
-                            {
-                                log.error('Marquee_01', error.message)
-                            })
+                this.#rf.e = {
+                    tag: {
+                        self: tag.self,
+                        slider: tag.slider,
                     },
-                    reload: () =>
-                    {
-                        instances.forEach((instance) => instance.reload())
-                        log.success('Marquee_01', 'Components reloaded successfully.')
+                    opt: {
+                        ease: opt.ease || 'none',
+                        duration: opt.duration || 30,
+                        direction: opt.direction || 'left',
+                    },
+                    prog: {
+                        currentProgress: 0,
+                        delay: 200,
+                        timer: null,
+                        anim: null,
+                    },
+                    render: {
+                        items: null,
+                        width: 0,
+                        xFrom: 0,
+                        xTo: 0,
                     },
                 }
-            },
-        },
-    }
+            }
+
+            #resetAnimation (anim)
+            {
+                if (!anim) return 0
+                const progress = anim.progress()
+                anim.progress(0).kill()
+                return progress
+            }
+
+            #renderAnimation ()
+            {
+                const { e } = this.#rf
+
+                e.prog.currentProgress = this.#resetAnimation(e.prog.anim)
+
+                e.render.items = e.tag.self.querySelectorAll('[rf-component-self-selector]')
+                e.render.width = parseInt(getComputedStyle(e.render.items[0]).width, 10)
+
+                if (e.opt.direction === 'left') {
+                    e.render.xFrom = 0
+                    e.render.xTo = -e.render.width
+                } else {
+                    e.render.xFrom = -e.render.width
+                    e.render.xTo = 0
+                }
+
+                e.prog.anim = gsap.fromTo(
+                    e.render.items,
+                    { x: e.render.xFrom },
+                    {
+                        x: e.render.xTo,
+                        duration: e.opt.duration,
+                        ease: e.opt.ease,
+                        repeat: -1,
+                    }
+                )
+
+                e.prog.anim.progress(e.prog.currentProgress)
+            }
+
+            Create ()
+            {
+                const { e } = this.#rf
+
+                e.tag.slider.setAttribute('rf-component-self-selector', '')
+                e.tag.self.append(e.tag.slider.cloneNode(true))
+
+                this.#renderAnimation()
+            }
+
+            Reload ()
+            {
+                const { e } = this.#rf
+
+                clearTimeout(e.prog.timer)
+                e.prog.timer = setTimeout(() => this.#renderAnimation(), e.prog.delay)
+            }
+
+            Destroy ()
+            {
+                const { e } = this.#rf
+
+                if (e.prog.anim) {
+                    e.prog.anim.kill()
+                    e.prog.anim = null
+                }
+
+                clearTimeout(e.prog.timer)
+            }
+        }
+
+        return { marquee: { _01: Marquee_01 } }
+    })()
+
 })()
 
 document.addEventListener('DOMContentLoaded', () =>
