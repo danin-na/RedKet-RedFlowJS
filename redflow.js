@@ -30,7 +30,8 @@ class Icon_01
 
 const RedFlow = (() =>
 {
-    //ANCHOR - ✅ Finished
+
+    //* Finished ✅
     /* -------------------------------------------------------------------------- */
     /* ------------------------------ Log Function ------------------------------ */
     /* -------------------------------------------------------------------------- */
@@ -46,50 +47,51 @@ const RedFlow = (() =>
                 if (Log.#cacheCredit) return
 
                 const commentTop = document.createComment(
-                    '⭕ RedFlow - Official Webflow Library by RedKet © 2025 RedKet. All rights reserved. Unauthorized copying, modification, or distribution is prohibited. Visit: www.RedKet.com | www.Red.Ket'
+                    "⭕ RedFlow - Official Webflow Library by RedKet © 2025 RedKet. All rights reserved. Unauthorized copying, modification, or distribution is prohibited. Visit: www.RedKet.com | www.Red.Ket"
                 )
                 const commentBottom = document.createComment(
-                    '⭕ RedFlow | OFFICIAL WEBFLOW LIBRARY BY REDKET © 2025 REDKET | WWW.REDKET.COM | WWW.RED.KET'
+                    "⭕ RedFlow | OFFICIAL WEBFLOW LIBRARY BY REDKET © 2025 REDKET | WWW.REDKET.COM | WWW.RED.KET"
                 )
 
                 document.body.prepend(commentTop)
                 document.body.appendChild(commentBottom)
 
                 console.log(
-                    '%cRed%cFlow%c - Official Webflow Library by %cRed%cKet%c\nCopyright © 2025 RedKet. All rights reserved.\nUnauthorized copying, modification, or distribution is prohibited.\nVisit: www.RedKet.com | www.Red.Ket',
-                    'color:#c33; background:#000; font-weight:bold; padding:2px 4px; border-radius:3px;',
-                    'color:#dfdfdf; background:#000; font-weight:bold; padding:2px 4px; border-radius:3px;',
-                    'color:#aaa; background:#000; padding:2px 4px; border-radius:3px;',
-                    'color:#c33; background:#000; font-weight:bold; padding:2px 4px; border-radius:3px;',
-                    'color:#dfdfdf; background:#000; font-weight:bold; padding:2px 4px; border-radius:3px;',
-                    'color:#888; font-size:11px;'
+                    "%cRed%cFlow%c - Official Webflow Library by %cRed%cKet%c\nCopyright © 2025 RedKet. All rights reserved.\nUnauthorized copying, modification, or distribution is prohibited.\nVisit: www.RedKet.com | www.Red.Ket",
+                    "color:#c33; background:#000; font-weight:bold; padding:2px 4px; border-radius:3px;",
+                    "color:#dfdfdf; background:#000; font-weight:bold; padding:2px 4px; border-radius:3px;",
+                    "color:#aaa; background:#000; padding:2px 4px; border-radius:3px;",
+                    "color:#c33; background:#000; font-weight:bold; padding:2px 4px; border-radius:3px;",
+                    "color:#dfdfdf; background:#000; font-weight:bold; padding:2px 4px; border-radius:3px;",
+                    "color:#888; font-size:11px;"
                 )
                 Log.#cacheCredit = true
             }
 
             static Error (contex, message)
             {
-                console.error('💢 ERROR → ⭕ RedFlow →', contex, message)
+                console.error("💢 ERROR → ⭕ RedFlow →", contex, message)
             }
             static Succ (contex, message)
             {
-                console.log('✅ SUCCESS → ⭕ RedFlow →', contex, message)
+                console.log("✅ SUCCESS → ⭕ RedFlow →", contex, message)
             }
             static Info (contex, message)
             {
-                console.info('❔ INFO → ⭕ RedFlow →', contex, message)
+                console.info("❔ INFO → ⭕ RedFlow →", contex, message)
             }
             static Warn (contex, message)
             {
-                console.warn('⚠️ WARN → ⭕ RedFlow →', contex, message)
+                console.warn("⚠️ WARN → ⭕ RedFlow →", contex, message)
             }
             static Debug (contex, message)
             {
-                console.debug('🐞 DEBUG → ⭕ RedFlow →', contex, message)
+                console.debug("🐞 DEBUG → ⭕ RedFlow →", contex, message)
             }
         }
     })()
 
+    //* Finished ✅
     /* -------------------------------------------------------------------------- */
     /* ------------------------------ Lib Function ------------------------------ */
     /* -------------------------------------------------------------------------- */
@@ -99,8 +101,8 @@ const RedFlow = (() =>
         return class Lib
         {
             static #cacheScript = {}
-            static #cdnGsap = 'https://cdnjs.cloudflare.com/ajax/libs/gsap/3.6.1/gsap.min.js'
-            static #cdnJquery = 'https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js'
+            static #cdnGsap = "https://cdnjs.cloudflare.com/ajax/libs/gsap/3.6.1/gsap.min.js"
+            static #cdnJquery = "https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"
 
             static #script (u)
             {
@@ -112,26 +114,26 @@ const RedFlow = (() =>
                 }
 
                 if (!document.querySelector(`link[rel="preload"][href="${u}"]`)) {
-                    const link = document.createElement('link')
-                    link.rel = 'preload'
+                    const link = document.createElement("link")
+                    link.rel = "preload"
                     link.href = u
-                    link.as = 'script'
+                    link.as = "script"
                     document.head.appendChild(link)
                 }
 
                 return (Lib.#cacheScript[u] = new Promise((resolve) =>
                 {
-                    const script = document.createElement('script')
+                    const script = document.createElement("script")
                     script.src = u
                     script.defer = true // Ensures scripts execute in order
                     script.onload = () =>
                     {
-                        log.Succ('Lib', `✅ Loaded: ${u}`)
+                        log.Succ("Lib", `✅ Loaded: ${u}`)
                         resolve()
                     }
                     script.onerror = () =>
                     {
-                        log.Error('Lib', `❌ Failed to load script: ${u}`)
+                        log.Error("Lib", `❌ Failed to load script: ${u}`)
                         resolve() // Resolve to prevent promise rejection outside scope
                     }
                     document.head.appendChild(script)
@@ -143,10 +145,10 @@ const RedFlow = (() =>
                 return Promise.all(
                     libs.map((lib) =>
                     {
-                        if (lib === 'gsap') return Lib.#script(Lib.#cdnGsap)
-                        if (lib === 'jquery') return Lib.#script(Lib.#cdnJquery)
-                        if (lib.startsWith('http')) return Lib.#script(lib) // Allow direct URL input
-                        log.Warn('Lib', `⚠️ Unknown library requested: ${lib}`)
+                        if (lib === "gsap") return Lib.#script(Lib.#cdnGsap)
+                        if (lib === "jquery") return Lib.#script(Lib.#cdnJquery)
+                        if (lib.startsWith("http")) return Lib.#script(lib) // Allow direct URL input
+                        log.Warn("Lib", `⚠️ Unknown library requested: ${lib}`)
                         return Promise.resolve() // Resolve instead of rejecting
                     })
                 )
@@ -154,6 +156,7 @@ const RedFlow = (() =>
         }
     })()
 
+    //! Under construct
     /* -------------------------------------------------------------------------- */
     /* ------------------------------- Components ------------------------------- */
     /* -------------------------------------------------------------------------- */
@@ -183,15 +186,15 @@ const RedFlow = (() =>
                 this.#rf.component.e.tag.self = tag.self
                 this.#rf.component.e.tag.slider = tag.slider
 
-                this.#rf.component.e.opt.ease = opt.ease || 'none'
+                this.#rf.component.e.opt.ease = opt.ease || "none"
                 this.#rf.component.e.opt.duration = opt.duration || 30
-                this.#rf.component.e.opt.direction = opt.direction || 'left'
+                this.#rf.component.e.opt.direction = opt.direction || "left"
 
                 this.#rf.component.e.prog.delay = 200
                 this.#rf.component.e.prog.time = null
                 this.#rf.component.e.prog.anim = null
 
-                this.#rf.component.e.tag.slider.setAttribute('rf-component-self-selector', '')
+                this.#rf.component.e.tag.slider.setAttribute("rf-component-self-selector", "")
                 this.#rf.component.e.tag.self.append(this.#rf.component.e.tag.slider.cloneNode(true))
 
                 // Create debounced version of #render using the custom debounce function
@@ -225,13 +228,13 @@ const RedFlow = (() =>
 
             #render ()
             {
-                console.log('RENDER')
+                console.log("RENDER")
                 var prog = this.#reset(this.#rf.component.e.prog.anim)
-                var items = this.#rf.component.e.tag.self.querySelectorAll('[rf-component-self-selector]')
+                var items = this.#rf.component.e.tag.self.querySelectorAll("[rf-component-self-selector]")
                 var width = parseInt(getComputedStyle(items[0]).width, 10)
                 var xFrom, xTo
 
-                if (this.#rf.component.e.opt.direction === 'left') {
+                if (this.#rf.component.e.opt.direction === "left") {
                     xFrom = 0
                     xTo = -width
                 } else {
@@ -254,7 +257,7 @@ const RedFlow = (() =>
 
             Create ()
             {
-                lib.Load(['gsap']).then(() =>
+                lib.Load(["gsap"]).then(() =>
                 {
                     this.#render()
                 })
@@ -312,17 +315,17 @@ const RedFlow = (() =>
     }
 })()
 
-document.addEventListener('DOMContentLoaded', () =>
+document.addEventListener("DOMContentLoaded", () =>
 {
     const M1 = RedFlow.Component.Marquee._01({
         id: {
             self: 'rf-component-e-id-self="marquee_01"',
-            slider: 'rf-component-e-id-slider',
+            slider: "rf-component-e-id-slider",
         },
         opt: {
-            ease: 'rf-component-e-opt-ease',
-            duration: 'rf-component-e-opt-duration',
-            direction: 'rf-component-e-opt-direction',
+            ease: "rf-component-e-opt-ease",
+            duration: "rf-component-e-opt-duration",
+            direction: "rf-component-e-opt-direction",
         },
     })
     M1.create()
@@ -330,31 +333,31 @@ document.addEventListener('DOMContentLoaded', () =>
     const M2 = RedFlow.Component.Marquee._01({
         id: {
             self: 'rf-component-e-id-self="marquee_02"',
-            slider: 'rf-component-e-id-slider',
+            slider: "rf-component-e-id-slider",
         },
         opt: {
-            ease: 'rf-component-e-opt-ease',
-            duration: 'rf-component-e-opt-duration',
-            direction: 'rf-component-e-opt-direction',
+            ease: "rf-component-e-opt-ease",
+            duration: "rf-component-e-opt-duration",
+            direction: "rf-component-e-opt-direction",
         },
     })
 
     const M3 = RedFlow.Component.Marquee._01({
         id: {
             self: 'rf-component-e-id-self="marquee_03"',
-            slider: 'rf-component-e-id-slider',
+            slider: "rf-component-e-id-slider",
         },
         opt: {
-            ease: 'rf-component-e-opt-ease',
-            duration: 'rf-component-e-opt-duration',
-            direction: 'rf-component-e-opt-direction',
+            ease: "rf-component-e-opt-ease",
+            duration: "rf-component-e-opt-duration",
+            direction: "rf-component-e-opt-direction",
         },
     })
 
     M2.create()
     M3.create()
 
-    window.addEventListener('resize', () =>
+    window.addEventListener("resize", () =>
     {
         M1.reload()
     })
