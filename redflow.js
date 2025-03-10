@@ -47,7 +47,7 @@ const RedFlow = (() =>
             commentBottom:
                 "⭕ RedFlow | OFFICIAL WEBFLOW LIBRARY BY REDKET © 2025 REDKET | WWW.REDKET.COM | WWW.RED.KET",
             logMessage:
-                `⭕ %cRed%cFlow%c - Official Webflow Library by %cRed%cKet%c\nCopyright © 2025 RedKet. All rights reserved.\nUnauthorized copying, modification, or distribution is prohibited.\nVisit: www.RedKet.com | www.Red.Ket`,
+                `%cRed%cFlow%c - Official Webflow Library by %cRed%cKet%c\nCopyright © 2025 RedKet. All rights reserved.\nUnauthorized copying, modification, or distribution is prohibited.\nVisit: www.RedKet.com | www.Red.Ket`,
             logStyle: [
                 "color:#c33; background:#000; font-weight:bold; padding:2px 4px; border-radius:3px;",
                 "color:#dfdfdf; background:#000; font-weight:bold; padding:2px 4px; border-radius:3px;",
@@ -264,7 +264,7 @@ const RedFlow = (() =>
 
             Create ()
             {
-                lib.Load(["gsap"]).then(() =>
+                lib.load(["gsap"]).then(() =>
                 {
                     this.#render()
                 })
