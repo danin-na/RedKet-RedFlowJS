@@ -63,7 +63,7 @@ const RedFlow = (() =>
         /* ------------------------------- Public API ------------------------------- */
 
         return {
-            Credit ()
+            credit ()
             {
                 if (cacheCredit) return
                 document.body.prepend(document.createComment(credit.commentTop))
@@ -71,27 +71,27 @@ const RedFlow = (() =>
                 console.log(credit.logMessage, ...credit.logStyle)
                 cacheCredit = true
             },
-            Error (context, message)
+            error (context, message)
             {
                 console.error(`💢 ERROR → ⭕ RedFlow → ${context}`, message)
             },
 
-            Succ (context, message)
+            success (context, message)
             {
                 console.log(`✅ SUCCESS → ⭕ RedFlow → ${context}`, message)
             },
 
-            Info (context, message)
+            info (context, message)
             {
                 console.info(`❔ INFO → ⭕ RedFlow → ${context}`, message)
             },
 
-            Warn (context, message)
+            warn (context, message)
             {
                 console.warn(`⚠️ WARN → ⭕ RedFlow → ${context}`, message)
             },
 
-            Debug (context, message)
+            debug (context, message)
             {
                 console.debug(`🐞 DEBUG → ⭕ RedFlow → ${context}`, message)
             },
@@ -134,12 +134,12 @@ const RedFlow = (() =>
                 script.defer = true
                 script.onload = () =>
                 {
-                    console.log(`✅ Loaded: ${url}`)
+                    log.success(url, "Loaded")
                     resolve()
                 }
                 script.onerror = () =>
                 {
-                    console.error(`❌ Failed to load script: ${url}`)
+                    log.error(url, "Failed to load")
                     resolve()
                 }
                 document.head.appendChild(script)
@@ -156,7 +156,7 @@ const RedFlow = (() =>
                 {
                     if (cdn[lib]) return loadScript(cdn[lib])
                     if (lib.startsWith("http")) return loadScript(lib)
-                    console.warn(`⚠️ Unknown library requested: ${lib}`)
+                    log.warn(lib, "Unknown library requested")
                     return Promise.resolve()
                 })
                 return Promise.all(promises)
@@ -236,7 +236,6 @@ const RedFlow = (() =>
 
             #render ()
             {
-                console.log("RENDER")
                 var prog = this.#reset(this.#rf.component.e.prog.anim)
                 var items = this.#rf.component.e.tag.self.querySelectorAll("[rf-component-self-selector]")
                 var width = parseInt(getComputedStyle(items[0]).width, 10)
@@ -285,7 +284,7 @@ const RedFlow = (() =>
     /* --------------------------------- execute -------------------------------- */
     /* -------------------------------------------------------------------------- */
 
-    log.Credit()
+    log.credit()
 
     /* -------------------------------------------------------------------------- */
     /* ------------------------ Exposed RF API (Component) ---------------------- */
