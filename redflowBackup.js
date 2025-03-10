@@ -32,26 +32,29 @@ class Icon_01
 
 const RedFlow = (() =>
 {
+
     /* -------------------------------------------------------------------------- */
     /* ------------------------------ Log Function ------------------------------ */
     /* -------------------------------------------------------------------------- */
 
     const log = (() =>
     {
-        'use strict'
+        "use strict"
 
         const credit = {
             commentTop:
-                '⭕ RedFlow - Official Webflow Library by RedKet © 2025 RedKet.\n All rights reserved. Unauthorized copying, modification, or distribution is prohibited.\n Visit: www.RedKet.com | www.Red.Ket',
-            commentBottom: '⭕ RedFlow | OFFICIAL WEBFLOW LIBRARY BY REDKET © 2025 REDKET | WWW.REDKET.COM | WWW.RED.KET',
-            logMessage: `%cRed%cFlow%c - Official Webflow Library by %cRed%cKet%c\nCopyright © 2025 RedKet. All rights reserved.\nUnauthorized copying, modification, or distribution is prohibited.\nVisit: www.RedKet.com | www.Red.Ket`,
+                "⭕ RedFlow - Official Webflow Library by RedKet © 2025 RedKet.\n All rights reserved. Unauthorized copying, modification, or distribution is prohibited.\n Visit: www.RedKet.com | www.Red.Ket",
+            commentBottom:
+                "⭕ RedFlow | OFFICIAL WEBFLOW LIBRARY BY REDKET © 2025 REDKET | WWW.REDKET.COM | WWW.RED.KET",
+            logMessage:
+                `%cRed%cFlow%c - Official Webflow Library by %cRed%cKet%c\nCopyright © 2025 RedKet. All rights reserved.\nUnauthorized copying, modification, or distribution is prohibited.\nVisit: www.RedKet.com | www.Red.Ket`,
             logStyle: [
-                'color:#c33; background:#000; font-weight:bold; padding:2px 4px; border-radius:3px;',
-                'color:#dfdfdf; background:#000; font-weight:bold; padding:2px 4px; border-radius:3px;',
-                'color:#aaa; background:#000; padding:2px 4px; border-radius:3px;',
-                'color:#c33; background:#000; font-weight:bold; padding:2px 4px; border-radius:3px;',
-                'color:#dfdfdf; background:#000; font-weight:bold; padding:2px 4px; border-radius:3px;',
-                'color:#888; font-size:11px;',
+                "color:#c33; background:#000; font-weight:bold; padding:2px 4px; border-radius:3px;",
+                "color:#dfdfdf; background:#000; font-weight:bold; padding:2px 4px; border-radius:3px;",
+                "color:#aaa; background:#000; padding:2px 4px; border-radius:3px;",
+                "color:#c33; background:#000; font-weight:bold; padding:2px 4px; border-radius:3px;",
+                "color:#dfdfdf; background:#000; font-weight:bold; padding:2px 4px; border-radius:3px;",
+                "color:#888; font-size:11px;",
             ],
         }
 
@@ -101,11 +104,11 @@ const RedFlow = (() =>
 
     const lib = (() =>
     {
-        'use strict'
+        "use strict"
 
         const cdn = {
-            gsap: 'https://cdnjs.cloudflare.com/ajax/libs/gsap/3.6.1/gsap.min.js',
-            jquery: 'https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js',
+            gsap: "https://cdnjs.cloudflare.com/ajax/libs/gsap/3.6.1/gsap.min.js",
+            jquery: "https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js",
         }
 
         const cacheScript = {}
@@ -118,25 +121,25 @@ const RedFlow = (() =>
                 return cacheScript[url]
             }
             if (!document.querySelector(`link[rel="preload"][href="${url}"]`)) {
-                const link = document.createElement('link')
-                link.rel = 'preload'
+                const link = document.createElement("link")
+                link.rel = "preload"
                 link.href = url
-                link.as = 'script'
+                link.as = "script"
                 document.head.appendChild(link)
             }
             cacheScript[url] = new Promise((resolve) =>
             {
-                const script = document.createElement('script')
+                const script = document.createElement("script")
                 script.src = url
                 script.defer = true
                 script.onload = () =>
                 {
-                    log.success(url, 'Loaded')
+                    log.success(url, "Loaded")
                     resolve()
                 }
                 script.onerror = () =>
                 {
-                    log.error(url, 'Failed to load')
+                    log.error(url, "Failed to load")
                     resolve()
                 }
                 document.head.appendChild(script)
@@ -152,8 +155,8 @@ const RedFlow = (() =>
                 const promises = libs.map((lib) =>
                 {
                     if (cdn[lib]) return loadScript(cdn[lib])
-                    if (lib.startsWith('http')) return loadScript(lib)
-                    log.warn(lib, 'Unknown library requested')
+                    if (lib.startsWith("http")) return loadScript(lib)
+                    log.warn(lib, "Unknown library requested")
                     return Promise.resolve()
                 })
                 return Promise.all(promises)
@@ -170,34 +173,75 @@ const RedFlow = (() =>
     {
         class Marquee_01
         {
-            #e = {}
+            #rf = {
+                component: {
+                    e: {
+                        id: { self: null, slider: null },
+                        tag: { self: null, slider: null },
+                        opt: { ease: null, duration: null, direction: null },
+                        prog: { delay: null, time: null, anim: null },
+                    },
+                },
+            }
 
-            constructor(config = { tag: {}, opt: {} })
+            #debouncedRender
+
+            constructor(config = {})
             {
-                this.#e = {
-                    tag: {
-                        self: config.tag.self,
-                        slider: config.tag.slider,
-                    },
-                    opt: {
-                        ease: config.opt.ease || 'none',
-                        duration: config.opt.duration || 30,
-                        direction: config.opt.direction || 'left',
-                    },
-                    prog: {
-                        delay: 200,
-                        anim: null,
-                    },
+                const tag = config.tag || {}
+                const opt = config.opt || {}
+
+                this.#rf.component.e.tag.self = tag.self
+                this.#rf.component.e.tag.slider = tag.slider
+
+                this.#rf.component.e.opt.ease = opt.ease || "none"
+                this.#rf.component.e.opt.duration = opt.duration || 30
+                this.#rf.component.e.opt.direction = opt.direction || "left"
+
+                this.#rf.component.e.prog.delay = 200
+                this.#rf.component.e.prog.time = null
+                this.#rf.component.e.prog.anim = null
+
+                this.#rf.component.e.tag.slider.setAttribute("rf-component-self-selector", "")
+                this.#rf.component.e.tag.self.append(this.#rf.component.e.tag.slider.cloneNode(true))
+
+                // Create debounced version of #render using the custom debounce function
+                this.#debouncedRender = this.#debounce(this.#render.bind(this), this.#rf.component.e.prog.delay)
+            }
+
+            // Private helper to debounce any function call without using the spread operator
+            #debounce (fn, delay)
+            {
+                var timeout = null
+                return function ()
+                {
+                    if (timeout !== null) {
+                        clearTimeout(timeout)
+                    }
+                    var args = arguments
+                    timeout = setTimeout(function ()
+                    {
+                        fn.apply(null, args)
+                    }, delay)
                 }
+            }
+
+            #reset (animation)
+            {
+                if (!animation) return 0
+                var savedProgress = animation.progress()
+                animation.progress(0).kill()
+                return savedProgress
             }
 
             #render ()
             {
-                var items = this.#e.tag.self.querySelectorAll('[rf-component-self-selector]')
+                var prog = this.#reset(this.#rf.component.e.prog.anim)
+                var items = this.#rf.component.e.tag.self.querySelectorAll("[rf-component-self-selector]")
                 var width = parseInt(getComputedStyle(items[0]).width, 10)
                 var xFrom, xTo
 
-                if (this.#e.opt.direction === 'left') {
+                if (this.#rf.component.e.opt.direction === "left") {
                     xFrom = 0
                     xTo = -width
                 } else {
@@ -205,33 +249,31 @@ const RedFlow = (() =>
                     xTo = 0
                 }
 
-                this.#e.prog.anim = gsap.fromTo(
+                this.#rf.component.e.prog.anim = gsap.fromTo(
                     items,
                     { x: xFrom },
                     {
                         x: xTo,
-                        duration: this.#e.opt.duration,
-                        ease: this.#e.opt.ease,
+                        duration: this.#rf.component.e.opt.duration,
+                        ease: this.#rf.component.e.opt.ease,
                         repeat: -1,
                     }
                 )
-
-                console.log('rendering', width, xFrom, xTo)
+                this.#rf.component.e.prog.anim.progress(prog)
             }
 
             Create ()
             {
-                lib.load(['gsap']).then(() =>
+                lib.load(["gsap"]).then(() =>
                 {
-                    this.#e.tag.slider.setAttribute('rf-component-self-selector', '')
-                    this.#e.tag.self.append(this.#e.tag.slider.cloneNode(true))
                     this.#render()
                 })
             }
 
             Reload ()
             {
-                this.#render()
+                // Use the debounced render method to prevent multiple rapid re-renders
+                this.#debouncedRender()
             }
         }
 
@@ -286,23 +328,49 @@ const RedFlow = (() =>
     }
 })()
 
-document.addEventListener('DOMContentLoaded', () =>
+document.addEventListener("DOMContentLoaded", () =>
 {
     const M1 = RedFlow.Component.Marquee._01({
         id: {
             self: 'rf-component-e-id-self="marquee_01"',
-            slider: 'rf-component-e-id-slider',
+            slider: "rf-component-e-id-slider",
         },
         opt: {
-            ease: 'rf-component-e-opt-ease',
-            duration: 'rf-component-e-opt-duration',
-            direction: 'rf-component-e-opt-direction',
+            ease: "rf-component-e-opt-ease",
+            duration: "rf-component-e-opt-duration",
+            direction: "rf-component-e-opt-direction",
+        },
+    })
+    M1.create()
+
+    const M2 = RedFlow.Component.Marquee._01({
+        id: {
+            self: 'rf-component-e-id-self="marquee_02"',
+            slider: "rf-component-e-id-slider",
+        },
+        opt: {
+            ease: "rf-component-e-opt-ease",
+            duration: "rf-component-e-opt-duration",
+            direction: "rf-component-e-opt-direction",
         },
     })
 
-    M1.create()
+    const M3 = RedFlow.Component.Marquee._01({
+        id: {
+            self: 'rf-component-e-id-self="marquee_03"',
+            slider: "rf-component-e-id-slider",
+        },
+        opt: {
+            ease: "rf-component-e-opt-ease",
+            duration: "rf-component-e-opt-duration",
+            direction: "rf-component-e-opt-direction",
+        },
+    })
 
-    window.addEventListener('resize', () =>
+    M2.create()
+    M3.create()
+
+    window.addEventListener("resize", () =>
     {
         M1.reload()
     })

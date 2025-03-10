@@ -10,7 +10,9 @@ export default [
     rules: {
       "no-inner-declarations": "error",
       "no-undef": "warn",
-      "func-names": "warn"
+      "func-names": "warn",
+      "no-unused-private-class-members": "warn",
+      "no-unused-vars": "warn"
     }
   }
 ];
