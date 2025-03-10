@@ -32,24 +32,23 @@ class Icon_01
 
 const RedFlow = (() =>
 {
-    //
-    //* Finished ✅
+
     /* -------------------------------------------------------------------------- */
     /* ------------------------------ Log Function ------------------------------ */
     /* -------------------------------------------------------------------------- */
 
     const log = (() =>
     {
-        let hasLoggedCredit = false
+        "use strict"
 
-        const CREDIT = {
-            COMMENT_TOP:
+        const credit = {
+            commentTop:
                 "⭕ RedFlow - Official Webflow Library by RedKet © 2025 RedKet.\n All rights reserved. Unauthorized copying, modification, or distribution is prohibited.\n Visit: www.RedKet.com | www.Red.Ket",
-            COMMENT_BOTTOM:
+            commentBottom:
                 "⭕ RedFlow | OFFICIAL WEBFLOW LIBRARY BY REDKET © 2025 REDKET | WWW.REDKET.COM | WWW.RED.KET",
-            LOG_MESSAGE:
-                `%cRed%cFlow%c - Official Webflow Library by %cRed%cKet%c\nCopyright © 2025 RedKet. All rights reserved.\nUnauthorized copying, modification, or distribution is prohibited.\nVisit: www.RedKet.com | www.Red.Ket`,
-            LOG_MESSAGE_STYLE: [
+            logMessage:
+                `⭕ %cRed%cFlow%c - Official Webflow Library by %cRed%cKet%c\nCopyright © 2025 RedKet. All rights reserved.\nUnauthorized copying, modification, or distribution is prohibited.\nVisit: www.RedKet.com | www.Red.Ket`,
+            logStyle: [
                 "color:#c33; background:#000; font-weight:bold; padding:2px 4px; border-radius:3px;",
                 "color:#dfdfdf; background:#000; font-weight:bold; padding:2px 4px; border-radius:3px;",
                 "color:#aaa; background:#000; padding:2px 4px; border-radius:3px;",
@@ -59,26 +58,18 @@ const RedFlow = (() =>
             ],
         }
 
-        const creditCommentTop = "⭕ RedFlow - Official Webflow Library by RedKet © 2025 RedKet.\n All rights reserved. Unauthorized copying, modification, or distribution is prohibited.\n Visit: www.RedKet.com | www.Red.Ket"
-        const creditCommentBottom = "⭕ RedFlow | OFFICIAL WEBFLOW LIBRARY BY REDKET © 2025 REDKET | WWW.REDKET.COM | WWW.RED.KET"
-        const creditLogMessage = `%cRed%cFlow%c - Official Webflow Library by %cRed%cKet%c\nCopyright © 2025 RedKet. All rights reserved.\nUnauthorized copying, modification, or distribution is prohibited.\nVisit: www.RedKet.com | www.Red.Ket`
-        const creditLogStyle = [
-            "color:#c33; background:#000; font-weight:bold; padding:2px 4px; border-radius:3px;",
-            "color:#dfdfdf; background:#000; font-weight:bold; padding:2px 4px; border-radius:3px;",
-            "color:#aaa; background:#000; padding:2px 4px; border-radius:3px;",
-            "color:#c33; background:#000; font-weight:bold; padding:2px 4px; border-radius:3px;",
-            "color:#dfdfdf; background:#000; font-weight:bold; padding:2px 4px; border-radius:3px;",
-            "color:#888; font-size:11px;",
-        ]
+        let cacheCredit = false
+
+        /* ------------------------------- Public API ------------------------------- */
 
         return {
             Credit ()
             {
-                if (hasLoggedCredit) return
-                document.body.prepend(document.createComment(CREDIT.COMMENT_TOP))
-                document.body.appendChild(document.createComment(CREDIT.COMMENT_BOTTOM))
-                console.log(CREDIT.LOG_MESSAGE, ...CREDIT.LOG_MESSAGE_STYLE)
-                hasLoggedCredit = true
+                if (cacheCredit) return
+                document.body.prepend(document.createComment(credit.commentTop))
+                document.body.appendChild(document.createComment(credit.commentBottom))
+                console.log(credit.logMessage, ...credit.logStyle)
+                cacheCredit = true
             },
             Error (context, message)
             {
@@ -113,61 +104,63 @@ const RedFlow = (() =>
 
     const lib = (() =>
     {
-        return class Lib
+        "use strict"
+
+        const cdn = {
+            gsap: "https://cdnjs.cloudflare.com/ajax/libs/gsap/3.6.1/gsap.min.js",
+            jquery: "https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js",
+        }
+
+        const cacheScript = {}
+
+        function loadScript (url)
         {
-            static #cacheScript = {}
-            static #cdnGsap = "https://cdnjs.cloudflare.com/ajax/libs/gsap/3.6.1/gsap.min.js"
-            static #cdnJquery = "https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"
-
-            static #script (u)
+            if (cacheScript[url]) return cacheScript[url]
+            if (document.querySelector(`script[src="${url}"]`)) {
+                cacheScript[url] = Promise.resolve()
+                return cacheScript[url]
+            }
+            if (!document.querySelector(`link[rel="preload"][href="${url}"]`)) {
+                const link = document.createElement("link")
+                link.rel = "preload"
+                link.href = url
+                link.as = "script"
+                document.head.appendChild(link)
+            }
+            cacheScript[url] = new Promise((resolve) =>
             {
-                if (Lib.#cacheScript[u]) return Lib.#cacheScript[u]
-
-                if (document.querySelector(`script[src="${u}"]`)) {
-                    Lib.#cacheScript[u] = Promise.resolve()
-                    return Lib.#cacheScript[u]
-                }
-
-                if (!document.querySelector(`link[rel="preload"][href="${u}"]`)) {
-                    const link = document.createElement("link")
-                    link.rel = "preload"
-                    link.href = u
-                    link.as = "script"
-                    document.head.appendChild(link)
-                }
-
-                return (Lib.#cacheScript[u] = new Promise((resolve) =>
+                const script = document.createElement("script")
+                script.src = url
+                script.defer = true
+                script.onload = () =>
                 {
-                    const script = document.createElement("script")
-                    script.src = u
-                    script.defer = true
-                    script.onload = () =>
-                    {
-                        log.Succ("Lib", `✅ Loaded: ${u}`)
-                        resolve()
-                    }
-                    script.onerror = () =>
-                    {
-                        log.Error("Lib", `❌ Failed to load script: ${u}`)
-                        resolve()
-                    }
-                    document.head.appendChild(script)
-                }))
-            }
+                    console.log(`✅ Loaded: ${url}`)
+                    resolve()
+                }
+                script.onerror = () =>
+                {
+                    console.error(`❌ Failed to load script: ${url}`)
+                    resolve()
+                }
+                document.head.appendChild(script)
+            })
+            return cacheScript[url]
+        }
 
-            static Load (libs)
+        /* ------------------------------- Public API ------------------------------- */
+
+        return {
+            load (libs)
             {
-                return Promise.all(
-                    libs.map((lib) =>
-                    {
-                        if (lib === "gsap") return Lib.#script(Lib.#cdnGsap)
-                        if (lib === "jquery") return Lib.#script(Lib.#cdnJquery)
-                        if (lib.startsWith("http")) return Lib.#script(lib)
-                        log.Warn("Lib", `⚠️ Unknown library requested: ${lib}`)
-                        return Promise.resolve()
-                    })
-                )
-            }
+                const promises = libs.map((lib) =>
+                {
+                    if (cdn[lib]) return loadScript(cdn[lib])
+                    if (lib.startsWith("http")) return loadScript(lib)
+                    console.warn(`⚠️ Unknown library requested: ${lib}`)
+                    return Promise.resolve()
+                })
+                return Promise.all(promises)
+            },
         }
     })()
 

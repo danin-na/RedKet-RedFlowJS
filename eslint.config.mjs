@@ -9,7 +9,8 @@ export default [
   {
     rules: {
       "no-inner-declarations": "error",
-      "no-undef": "warn"
+      "no-undef": "warn",
+      "func-names": "warn"
     }
   }
 ];
