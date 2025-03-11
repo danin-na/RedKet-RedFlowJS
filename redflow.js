@@ -70,27 +70,27 @@ const RedFlow = (() =>
             },
             error (context, message)
             {
-                console.error(`💢 ERROR → ⭕ RedFlow → ${context}`, message)
+                console.error(`💢 ERROR → ⭕ RedFlow → ${context} →`, message)
             },
 
             success (context, message)
             {
-                console.log(`✅ SUCCESS → ⭕ RedFlow → ${context}`, message)
+                console.log(`✅ SUCCESS → ⭕ RedFlow → ${context} →`, message)
             },
 
             info (context, message)
             {
-                console.info(`❔ INFO → ⭕ RedFlow → ${context}`, message)
+                console.info(`❔ INFO → ⭕ RedFlow → ${context} →`, message)
             },
 
             warn (context, message)
             {
-                console.warn(`⚠️ WARN → ⭕ RedFlow → ${context}`, message)
+                console.warn(`⚠️ WARN → ⭕ RedFlow → ${context} →`, message)
             },
 
             debug (context, message)
             {
-                console.debug(`🐞 DEBUG → ⭕ RedFlow → ${context}`, message)
+                console.debug(`🐞 DEBUG → ⭕ RedFlow → ${context} →`, message)
             },
         }
     })()
@@ -184,15 +184,21 @@ const RedFlow = (() =>
                         duration: config.opt.duration || 30,
                         direction: config.opt.direction || 'left',
                     },
-                    prog: {
+                    anim: {
+                        tween: null,
+                        prog: 0,
                         delay: 200,
-                        anim: null,
                     },
                 }
             }
 
             #render ()
             {
+                if (this.#e.anim.tween) {
+                    this.#e.anim.prog = this.#e.anim.tween.progress()
+                    this.#e.anim.tween.progress(0).kill()
+                }
+
                 var items = this.#e.tag.self.querySelectorAll('[rf-component-self-selector]')
                 var width = parseInt(getComputedStyle(items[0]).width, 10)
                 var xFrom, xTo
@@ -205,7 +211,8 @@ const RedFlow = (() =>
                     xTo = 0
                 }
 
-                this.#e.prog.anim = gsap.fromTo(
+                // Assign the gsap animation to animation
+                this.#e.anim.tween = gsap.fromTo(
                     items,
                     { x: xFrom },
                     {
@@ -216,12 +223,12 @@ const RedFlow = (() =>
                     }
                 )
 
-                console.log('rendering', width, xFrom, xTo)
+                this.#e.anim.tween.progress(this.#e.anim.prog)
             }
 
             Create ()
             {
-                lib.load(['gsap']).then(() =>
+                lib.load(['gsap', 'jquery']).then(() =>
                 {
                     this.#e.tag.slider.setAttribute('rf-component-self-selector', '')
                     this.#e.tag.self.append(this.#e.tag.slider.cloneNode(true))
@@ -243,6 +250,7 @@ const RedFlow = (() =>
     /* -------------------------------------------------------------------------- */
 
     log.credit()
+    log.success('Components Library', 'is running')
 
     /* -------------------------------------------------------------------------- */
     /* ------------------------ Exposed RF API (Component) ---------------------- */
