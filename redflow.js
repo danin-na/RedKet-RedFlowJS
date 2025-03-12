@@ -27,39 +27,46 @@ class Icon_01
     */
 
 /* -------------------------------------------------------------------------- */
-/*                                   RedFlow                                  */
+/* --------------------------------- RedFlow -------------------------------- */
 /* -------------------------------------------------------------------------- */
 
 const RedFlow = (() =>
 {
-    const rf = {};
+    const rf = {}
+    rf.log = {}
+    rf.lib = {}
+    rf.API = {}
+
 
     /* -------------------------------------------------------------------------- */
-    /* -------------------------------- Helpers -------------------------------- */
+    /*                                   helpers                                  */
     /* -------------------------------------------------------------------------- */
+
+    // ------------------------------- Log Helpers
 
     rf.log = (() =>
     {
-        'use strict'
+        "use strict"
 
         const creditInfo = {
             commentTop:
-                '⭕ RedFlow - Official Webflow Library by RedKet © 2025 RedKet.\n All rights reserved. Unauthorized copying, modification, or distribution is prohibited.\n Visit: www.RedKet.com | www.Red.Ket',
-            commentBottom: '⭕ RedFlow | OFFICIAL WEBFLOW LIBRARY BY REDKET © 2025 REDKET | WWW.REDKET.COM | WWW.RED.KET',
+                "⭕ RedFlow - Official Webflow Library by RedKet © 2025 RedKet.\n All rights reserved. Unauthorized copying, modification, or distribution is prohibited.\n Visit: www.RedKet.com | www.Red.Ket",
+            commentBottom:
+                "⭕ RedFlow | OFFICIAL WEBFLOW LIBRARY BY REDKET © 2025 REDKET | WWW.REDKET.COM | WWW.RED.KET",
             logMessage: `%cRed%cFlow%c - Official Webflow Library by %cRed%cKet%c\nCopyright © 2025 RedKet. All rights reserved.\nUnauthorized copying, modification, or distribution is prohibited.\nVisit: www.RedKet.com | www.Red.Ket`,
             logStyle: [
-                'color:#c33; background:#000; font-weight:bold; padding:2px 4px; border-radius:3px;',
-                'color:#dfdfdf; background:#000; font-weight:bold; padding:2px 4px; border-radius:3px;',
-                'color:#aaa; background:#000; padding:2px 4px; border-radius:3px;',
-                'color:#c33; background:#000; font-weight:bold; padding:2px 4px; border-radius:3px;',
-                'color:#dfdfdf; background:#000; font-weight:bold; padding:2px 4px; border-radius:3px;',
-                'color:#888; font-size:11px;',
+                "color:#c33; background:#000; font-weight:bold; padding:2px 4px; border-radius:3px;",
+                "color:#dfdfdf; background:#000; font-weight:bold; padding:2px 4px; border-radius:3px;",
+                "color:#aaa; background:#000; padding:2px 4px; border-radius:3px;",
+                "color:#c33; background:#000; font-weight:bold; padding:2px 4px; border-radius:3px;",
+                "color:#dfdfdf; background:#000; font-weight:bold; padding:2px 4px; border-radius:3px;",
+                "color:#888; font-size:11px;",
             ],
         }
 
         let cacheCredit = false
 
-        /* ------------------------------- Public API ------------------------------- */
+        // ------------------------------- Internal API
 
         function credit ()
         {
@@ -70,26 +77,43 @@ const RedFlow = (() =>
             cacheCredit = true
         }
 
-        function error (context, message) { console.error(`💢 ERROR → ⭕ RedFlow → ${context} →`, message) }
+        function error (context, message)
+        {
+            console.error(`💢 ERROR → ⭕ RedFlow → ${context} →`, message)
+        }
 
-        function success (context, message) { console.log(`✅ SUCCESS → ⭕ RedFlow → ${context} →`, message) }
+        function success (context, message)
+        {
+            console.log(`✅ SUCCESS → ⭕ RedFlow → ${context} →`, message)
+        }
 
-        function info (context, message) { console.info(`❔ INFO → ⭕ RedFlow → ${context} →`, message) }
+        function info (context, message)
+        {
+            console.info(`❔ INFO → ⭕ RedFlow → ${context} →`, message)
+        }
 
-        function warn (context, message) { console.warn(`⚠️ WARN → ⭕ RedFlow → ${context} →`, message) }
+        function warn (context, message)
+        {
+            console.warn(`⚠️ WARN → ⭕ RedFlow → ${context} →`, message)
+        }
 
-        function debug (context, message) { console.debug(`🐞 DEBUG → ⭕ RedFlow → ${context} →`, message) }
+        function debug (context, message)
+        {
+            console.debug(`🐞 DEBUG → ⭕ RedFlow → ${context} →`, message)
+        }
 
         return { credit, error, success, info, warn, debug }
     })()
 
+    // ------------------------------- Lib Helpers
+
     rf.lib = (() =>
     {
-        'use strict'
+        "use strict"
 
         const cdn = {
-            gsap: 'https://cdnjs.cloudflare.com/ajax/libs/gsap/3.6.1/gsap.min.js',
-            jquery: 'https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js',
+            gsap: "https://cdnjs.cloudflare.com/ajax/libs/gsap/3.6.1/gsap.min.js",
+            jquery: "https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js",
         }
 
         const cacheScript = {}
@@ -102,25 +126,25 @@ const RedFlow = (() =>
                 return cacheScript[url]
             }
             if (!document.querySelector(`link[rel="preload"][href="${url}"]`)) {
-                const link = document.createElement('link')
-                link.rel = 'preload'
+                const link = document.createElement("link")
+                link.rel = "preload"
                 link.href = url
-                link.as = 'script'
+                link.as = "script"
                 document.head.appendChild(link)
             }
             cacheScript[url] = new Promise((resolve) =>
             {
-                const script = document.createElement('script')
+                const script = document.createElement("script")
                 script.src = url
                 script.defer = true
                 script.onload = () =>
                 {
-                    log.success(url, 'Loaded')
+                    rf.log.success(url, "Loaded")
                     resolve()
                 }
                 script.onerror = () =>
                 {
-                    log.error(url, 'Failed to load')
+                    rf.log.error(url, "Failed to load")
                     resolve()
                 }
                 document.head.appendChild(script)
@@ -128,28 +152,30 @@ const RedFlow = (() =>
             return cacheScript[url]
         }
 
-        /* ------------------------------- Public API ------------------------------- */
+        // ------------------------------ Internal API
 
-        return {
-            load (libs)
+        function load (libs)
+        {
+            const promises = libs.map((lib) =>
             {
-                const promises = libs.map((lib) =>
-                {
-                    if (cdn[lib]) return loadScript(cdn[lib])
-                    if (lib.startsWith('http')) return loadScript(lib)
-                    log.warn(lib, 'Unknown library requested')
-                    return Promise.resolve()
-                })
-                return Promise.all(promises)
-            },
+                if (cdn[lib]) return loadScript(cdn[lib])
+                if (lib.startsWith("http")) return loadScript(lib)
+                rf.log.warn(lib, "Unknown library requested")
+                return Promise.resolve()
+            })
+            return Promise.all(promises)
         }
+
+        return { load }
     })()
 
     /* -------------------------------------------------------------------------- */
-    /* ------------------------------- Libraries ------------------------------- */
+    /*                                  Libraries                                 */
     /* -------------------------------------------------------------------------- */
 
-    rf.component = (() =>
+    // ------------------------------- Components
+
+    rf._comp = (() =>
     {
         class Marquee_01
         {
@@ -163,9 +189,9 @@ const RedFlow = (() =>
                         slider: config.tag.slider,
                     },
                     opt: {
-                        ease: config.opt.ease || 'none',
+                        ease: config.opt.ease || "none",
                         duration: config.opt.duration || 30,
-                        direction: config.opt.direction || 'left',
+                        direction: config.opt.direction || "left",
                     },
                     anim: {
                         tween: null,
@@ -182,11 +208,11 @@ const RedFlow = (() =>
                     this.#e.anim.tween.progress(0).kill()
                 }
 
-                var items = this.#e.tag.self.querySelectorAll('[rf-component-self-selector]')
+                var items = this.#e.tag.self.querySelectorAll("[rf-component-self-selector]")
                 var width = parseInt(getComputedStyle(items[0]).width, 10)
                 var xFrom, xTo
 
-                if (this.#e.opt.direction === 'left') {
+                if (this.#e.opt.direction === "left") {
                     xFrom = 0
                     xTo = -width
                 } else {
@@ -211,9 +237,9 @@ const RedFlow = (() =>
 
             Create ()
             {
-                lib.load(['gsap', 'jquery']).then(() =>
+                rf.lib.load(["gsap", "jquery"]).then(() =>
                 {
-                    this.#e.tag.slider.setAttribute('rf-component-self-selector', '')
+                    this.#e.tag.slider.setAttribute("rf-component-self-selector", "")
                     this.#e.tag.self.append(this.#e.tag.slider.cloneNode(true))
                     this.#render()
                 })
@@ -225,80 +251,84 @@ const RedFlow = (() =>
             }
         }
 
-        return { marquee: { _01: Marquee_01 } }
+        return { Marquee_01 }
     })()
 
-    rf.worker = (() =>
-    {
+    // ------------------------------- workers
 
-    })()
-
-    /* -------------------------------------------------------------------------- */
-    /* --------------------------------- execute -------------------------------- */
-    /* -------------------------------------------------------------------------- */
-
-    rf.log.credit()
-    rf.log.success('Components Library', 'is running')
+    rf._work = (() => { })()
 
     /* -------------------------------------------------------------------------- */
     /* ------------------------ Exposed RF API (Component) ---------------------- */
     /* -------------------------------------------------------------------------- */
 
-    return {
-        Component: {
-            Marquee: {
-                _01 ({ id, opt })
-                {
-                    const instances = []
-                    document.querySelectorAll(`[${id.self}]`).forEach((el) =>
-                    {
-                        instances.push(
-                            new comp.marquee._01({
-                                tag: {
-                                    self: el,
-                                    slider: el.querySelector(`[${id.slider}]`),
-                                },
-                                opt: {
-                                    ease: el.getAttribute(`${opt.ease}`),
-                                    duration: parseFloat(el.getAttribute(`${opt.duration}`)),
-                                    direction: el.getAttribute(`${opt.direction}`),
-                                },
-                            })
-                        )
+    // ------------------------------ APIs
+
+    rf.API.Component = (() =>
+    {
+        function Marquee_01 ({ id, opt })
+        {
+            const instances = []
+            document.querySelectorAll(`[${id.self}]`).forEach((el) =>
+            {
+                instances.push(
+                    new rf._comp.Marquee_01({
+                        tag: {
+                            self: el,
+                            slider: el.querySelector(`[${id.slider}]`),
+                        },
+                        opt: {
+                            ease: el.getAttribute(`${opt.ease}`),
+                            duration: parseFloat(el.getAttribute(`${opt.duration}`)),
+                            direction: el.getAttribute(`${opt.direction}`),
+                        },
                     })
-                    return {
-                        create ()
-                        {
-                            instances.forEach((i) => i.Create())
-                        },
-                        reload ()
-                        {
-                            instances.forEach((i) => i.Reload())
-                        },
-                    }
+                )
+            })
+            return {
+                create ()
+                {
+                    instances.forEach((i) => i.Create())
                 },
-            },
-        },
-    }
+                reload ()
+                {
+                    instances.forEach((i) => i.Reload())
+                },
+            }
+        }
+
+        return { Marquee_01 }
+    })()
+
+    // ------------------------------ RedFlow
+
+    rf.log.credit()
+    rf.log.success("Components Library", "is running")
+
+    // ------------------------------ External API
+
+    return { Component: rf.API.Component }
+
 })()
 
-document.addEventListener('DOMContentLoaded', () =>
+document.addEventListener("DOMContentLoaded", () =>
 {
-    const M1 = RedFlow.Component.Marquee._01({
+
+    const M1 = new RedFlow.Component.Marquee_01({
         id: {
             self: 'rf-component-e-id-self="marquee_01"',
-            slider: 'rf-component-e-id-slider',
+            slider: "rf-component-e-id-slider",
         },
         opt: {
-            ease: 'rf-component-e-opt-ease',
-            duration: 'rf-component-e-opt-duration',
-            direction: 'rf-component-e-opt-direction',
+            ease: "rf-component-e-opt-ease",
+            duration: "rf-component-e-opt-duration",
+            direction: "rf-component-e-opt-direction",
         },
     })
 
     M1.create()
 
-    window.addEventListener('resize', () =>
+    window.addEventListener("resize", () =>
     {
         M1.reload()
     })
