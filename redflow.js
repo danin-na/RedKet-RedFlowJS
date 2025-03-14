@@ -86,10 +86,6 @@ class Icon02
     }
 }
 
-
-
-
-
 class Slider01
 {
     #e
@@ -355,5 +351,3 @@ document.addEventListener('DOMContentLoaded', () =>
     })
     */
 })
-
-1367

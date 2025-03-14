@@ -1,37 +1,51 @@
-class Icon01
+class IconWorker
 {
-    #w
+    #rf;
 
-    constructor(config = {})
+    constructor(config)
     {
-        // Set up component data
-        this.#w = {}
-        this.#w.el = {}
-        this.#w.el.self = config.tag.self
-
-        this.#w.opt = {}
-        this.#w.opt.svgPath = config.set.svgPath
-
-        // Render the icon
-        this.#render()
+        this.#rf = {};
+        this.#rf.worker = {};
+        this.#rf.worker.query = {};
+        this.#rf.worker.attr = {};
+        //
+        this.#rf.worker.query.icon = config.rf.worker.query.icon;
+        this.#rf.worker.attr.src = config.rf.worker.attr.src;
     }
 
-    #render ()
+    run ()
     {
-        if (this.#w.opt.svgPath) {
-            const decodedSvg = decodeURIComponent(this.#w.opt.svgPath)
-            this.#w.el.self.innerHTML = decodedSvg
-        }
-    }
-
-    static initAll ()
-    {
-        document.querySelectorAll('[data-svg]').forEach((el) =>
+        document.addEventListener('DOMContentLoaded', () =>
         {
-            new Icon01({
-                tag: { self: el },
-                set: { svgPath: el.getAttribute('data-svg') }
-            })
-        })
+            document.querySelectorAll(this.#rf.worker.query.icon).forEach(e =>
+            {
+                e.innerHTML = decodeURIComponent(e.getAttribute(this.#rf.worker.attr.src))
+            });
+        });
     }
 }
+
+// Example configuration and usage:
+const config = {
+    rf: {
+        worker: {
+            query: {
+                icon: '.icon'
+            },
+            attr: {
+                src: 'data-svg-src' // The attribute name holding the encoded SVG data
+            }
+        }
+    }
+};
+
+// Create one worker instance and initialize it
+const iconWorker = new IconWorker(config);
+iconWorker.init();
+
+
+// data-rf-worker-
+// data-rf-animer-
+// data-rf-trigger-
+// data-rf-component-
+
