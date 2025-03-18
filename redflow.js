@@ -1,3 +1,4 @@
+/*
 class Icon_01
 {
     #rf = {
@@ -23,6 +24,7 @@ class Icon_01
         return this
     }
 }
+    */
 
 /* -------------------------------------------------------------------------- */
 /*                                   RedFlow                                  */
@@ -30,7 +32,7 @@ class Icon_01
 
 const RedFlow = (() =>
 {
-
+    //
     //* Finished ✅
     /* -------------------------------------------------------------------------- */
     /* ------------------------------ Log Function ------------------------------ */
@@ -38,60 +40,73 @@ const RedFlow = (() =>
 
     const log = (() =>
     {
-        return class Log
-        {
-            static #cacheCredit = false
+        let hasLoggedCredit = false
 
-            static Credit ()
-            {
-                if (Log.#cacheCredit) return
+        const CREDIT = {
+            COMMENT_TOP:
+                "⭕ RedFlow - Official Webflow Library by RedKet © 2025 RedKet.\n All rights reserved. Unauthorized copying, modification, or distribution is prohibited.\n Visit: www.RedKet.com | www.Red.Ket",
+            COMMENT_BOTTOM:
+                "⭕ RedFlow | OFFICIAL WEBFLOW LIBRARY BY REDKET © 2025 REDKET | WWW.REDKET.COM | WWW.RED.KET",
+            LOG_MESSAGE:
+                `%cRed%cFlow%c - Official Webflow Library by %cRed%cKet%c\nCopyright © 2025 RedKet. All rights reserved.\nUnauthorized copying, modification, or distribution is prohibited.\nVisit: www.RedKet.com | www.Red.Ket`,
+            LOG_MESSAGE_STYLE: [
+                "color:#c33; background:#000; font-weight:bold; padding:2px 4px; border-radius:3px;",
+                "color:#dfdfdf; background:#000; font-weight:bold; padding:2px 4px; border-radius:3px;",
+                "color:#aaa; background:#000; padding:2px 4px; border-radius:3px;",
+                "color:#c33; background:#000; font-weight:bold; padding:2px 4px; border-radius:3px;",
+                "color:#dfdfdf; background:#000; font-weight:bold; padding:2px 4px; border-radius:3px;",
+                "color:#888; font-size:11px;",
+            ],
+        }
 
-                const commentTop = document.createComment(
-                    "⭕ RedFlow - Official Webflow Library by RedKet © 2025 RedKet. All rights reserved. Unauthorized copying, modification, or distribution is prohibited. Visit: www.RedKet.com | www.Red.Ket"
-                )
-                const commentBottom = document.createComment(
-                    "⭕ RedFlow | OFFICIAL WEBFLOW LIBRARY BY REDKET © 2025 REDKET | WWW.REDKET.COM | WWW.RED.KET"
-                )
+        const creditCommentTop = "⭕ RedFlow - Official Webflow Library by RedKet © 2025 RedKet.\n All rights reserved. Unauthorized copying, modification, or distribution is prohibited.\n Visit: www.RedKet.com | www.Red.Ket"
+        const creditCommentBottom = "⭕ RedFlow | OFFICIAL WEBFLOW LIBRARY BY REDKET © 2025 REDKET | WWW.REDKET.COM | WWW.RED.KET"
+        const creditLogMessage = `%cRed%cFlow%c - Official Webflow Library by %cRed%cKet%c\nCopyright © 2025 RedKet. All rights reserved.\nUnauthorized copying, modification, or distribution is prohibited.\nVisit: www.RedKet.com | www.Red.Ket`
+        const creditLogStyle = [
+            "color:#c33; background:#000; font-weight:bold; padding:2px 4px; border-radius:3px;",
+            "color:#dfdfdf; background:#000; font-weight:bold; padding:2px 4px; border-radius:3px;",
+            "color:#aaa; background:#000; padding:2px 4px; border-radius:3px;",
+            "color:#c33; background:#000; font-weight:bold; padding:2px 4px; border-radius:3px;",
+            "color:#dfdfdf; background:#000; font-weight:bold; padding:2px 4px; border-radius:3px;",
+            "color:#888; font-size:11px;",
+        ]
 
-                document.body.prepend(commentTop)
-                document.body.appendChild(commentBottom)
+        return {
+            Credit ()
+            {
+                if (hasLoggedCredit) return
+                document.body.prepend(document.createComment(CREDIT.COMMENT_TOP))
+                document.body.appendChild(document.createComment(CREDIT.COMMENT_BOTTOM))
+                console.log(CREDIT.LOG_MESSAGE, ...CREDIT.LOG_MESSAGE_STYLE)
+                hasLoggedCredit = true
+            },
+            Error (context, message)
+            {
+                console.error(`💢 ERROR → ⭕ RedFlow → ${context}`, message)
+            },
 
-                console.log(
-                    "%cRed%cFlow%c - Official Webflow Library by %cRed%cKet%c\nCopyright © 2025 RedKet. All rights reserved.\nUnauthorized copying, modification, or distribution is prohibited.\nVisit: www.RedKet.com | www.Red.Ket",
-                    "color:#c33; background:#000; font-weight:bold; padding:2px 4px; border-radius:3px;",
-                    "color:#dfdfdf; background:#000; font-weight:bold; padding:2px 4px; border-radius:3px;",
-                    "color:#aaa; background:#000; padding:2px 4px; border-radius:3px;",
-                    "color:#c33; background:#000; font-weight:bold; padding:2px 4px; border-radius:3px;",
-                    "color:#dfdfdf; background:#000; font-weight:bold; padding:2px 4px; border-radius:3px;",
-                    "color:#888; font-size:11px;"
-                )
-                Log.#cacheCredit = true
-            }
+            Succ (context, message)
+            {
+                console.log(`✅ SUCCESS → ⭕ RedFlow → ${context}`, message)
+            },
 
-            static Error (contex, message)
+            Info (context, message)
             {
-                console.error("💢 ERROR → ⭕ RedFlow →", contex, message)
-            }
-            static Succ (contex, message)
+                console.info(`❔ INFO → ⭕ RedFlow → ${context}`, message)
+            },
+
+            Warn (context, message)
             {
-                console.log("✅ SUCCESS → ⭕ RedFlow →", contex, message)
-            }
-            static Info (contex, message)
+                console.warn(`⚠️ WARN → ⭕ RedFlow → ${context}`, message)
+            },
+
+            Debug (context, message)
             {
-                console.info("❔ INFO → ⭕ RedFlow →", contex, message)
-            }
-            static Warn (contex, message)
-            {
-                console.warn("⚠️ WARN → ⭕ RedFlow →", contex, message)
-            }
-            static Debug (contex, message)
-            {
-                console.debug("🐞 DEBUG → ⭕ RedFlow →", contex, message)
-            }
+                console.debug(`🐞 DEBUG → ⭕ RedFlow → ${context}`, message)
+            },
         }
     })()
 
-    //* Finished ✅
     /* -------------------------------------------------------------------------- */
     /* ------------------------------ Lib Function ------------------------------ */
     /* -------------------------------------------------------------------------- */
@@ -125,7 +140,7 @@ const RedFlow = (() =>
                 {
                     const script = document.createElement("script")
                     script.src = u
-                    script.defer = true // Ensures scripts execute in order
+                    script.defer = true
                     script.onload = () =>
                     {
                         log.Succ("Lib", `✅ Loaded: ${u}`)
@@ -134,7 +149,7 @@ const RedFlow = (() =>
                     script.onerror = () =>
                     {
                         log.Error("Lib", `❌ Failed to load script: ${u}`)
-                        resolve() // Resolve to prevent promise rejection outside scope
+                        resolve()
                     }
                     document.head.appendChild(script)
                 }))
@@ -147,9 +162,9 @@ const RedFlow = (() =>
                     {
                         if (lib === "gsap") return Lib.#script(Lib.#cdnGsap)
                         if (lib === "jquery") return Lib.#script(Lib.#cdnJquery)
-                        if (lib.startsWith("http")) return Lib.#script(lib) // Allow direct URL input
+                        if (lib.startsWith("http")) return Lib.#script(lib)
                         log.Warn("Lib", `⚠️ Unknown library requested: ${lib}`)
-                        return Promise.resolve() // Resolve instead of rejecting
+                        return Promise.resolve()
                     })
                 )
             }
@@ -272,6 +287,12 @@ const RedFlow = (() =>
 
         return { marquee: { _01: Marquee_01 } }
     })()
+
+    /* -------------------------------------------------------------------------- */
+    /* --------------------------------- execute -------------------------------- */
+    /* -------------------------------------------------------------------------- */
+
+    log.Credit()
 
     /* -------------------------------------------------------------------------- */
     /* ------------------------ Exposed RF API (Component) ---------------------- */
