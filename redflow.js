@@ -32,18 +32,17 @@ class Icon_01
 
 const RedFlow = (() =>
 {
+    const rf = {};
 
     /* -------------------------------------------------------------------------- */
-    /* -------------------------------- Helppers -------------------------------- */
+    /* -------------------------------- Helpers -------------------------------- */
     /* -------------------------------------------------------------------------- */
 
-    //* Log Helpers
-
-    const log = (() =>
+    rf.log = (() =>
     {
         'use strict'
 
-        const credit = {
+        const creditInfo = {
             commentTop:
                 '⭕ RedFlow - Official Webflow Library by RedKet © 2025 RedKet.\n All rights reserved. Unauthorized copying, modification, or distribution is prohibited.\n Visit: www.RedKet.com | www.Red.Ket',
             commentBottom: '⭕ RedFlow | OFFICIAL WEBFLOW LIBRARY BY REDKET © 2025 REDKET | WWW.REDKET.COM | WWW.RED.KET',
@@ -62,45 +61,29 @@ const RedFlow = (() =>
 
         /* ------------------------------- Public API ------------------------------- */
 
-        return {
-            credit ()
-            {
-                if (cacheCredit) return
-                document.body.prepend(document.createComment(credit.commentTop))
-                document.body.appendChild(document.createComment(credit.commentBottom))
-                console.log(credit.logMessage, ...credit.logStyle)
-                cacheCredit = true
-            },
-            error (context, message)
-            {
-                console.error(`💢 ERROR → ⭕ RedFlow → ${context} →`, message)
-            },
-
-            success (context, message)
-            {
-                console.log(`✅ SUCCESS → ⭕ RedFlow → ${context} →`, message)
-            },
-
-            info (context, message)
-            {
-                console.info(`❔ INFO → ⭕ RedFlow → ${context} →`, message)
-            },
-
-            warn (context, message)
-            {
-                console.warn(`⚠️ WARN → ⭕ RedFlow → ${context} →`, message)
-            },
-
-            debug (context, message)
-            {
-                console.debug(`🐞 DEBUG → ⭕ RedFlow → ${context} →`, message)
-            },
+        function credit ()
+        {
+            if (cacheCredit) return
+            document.body.prepend(document.createComment(creditInfo.commentTop))
+            document.body.appendChild(document.createComment(creditInfo.commentBottom))
+            console.log(creditInfo.logMessage, ...creditInfo.logStyle)
+            cacheCredit = true
         }
+
+        function error (context, message) { console.error(`💢 ERROR → ⭕ RedFlow → ${context} →`, message) }
+
+        function success (context, message) { console.log(`✅ SUCCESS → ⭕ RedFlow → ${context} →`, message) }
+
+        function info (context, message) { console.info(`❔ INFO → ⭕ RedFlow → ${context} →`, message) }
+
+        function warn (context, message) { console.warn(`⚠️ WARN → ⭕ RedFlow → ${context} →`, message) }
+
+        function debug (context, message) { console.debug(`🐞 DEBUG → ⭕ RedFlow → ${context} →`, message) }
+
+        return { credit, error, success, info, warn, debug }
     })()
 
-    //* Lib Helpers
-
-    const lib = (() =>
+    rf.lib = (() =>
     {
         'use strict'
 
@@ -162,12 +145,11 @@ const RedFlow = (() =>
         }
     })()
 
-    //! Under construct
     /* -------------------------------------------------------------------------- */
-    /* ------------------------------- Components ------------------------------- */
+    /* ------------------------------- Libraries ------------------------------- */
     /* -------------------------------------------------------------------------- */
 
-    const comp = (() =>
+    rf.component = (() =>
     {
         class Marquee_01
         {
@@ -246,11 +228,7 @@ const RedFlow = (() =>
         return { marquee: { _01: Marquee_01 } }
     })()
 
-    /* -------------------------------------------------------------------------- */
-    /* --------------------------------- Wrokers -------------------------------- */
-    /* -------------------------------------------------------------------------- */
-
-    const weroker = (() =>
+    rf.worker = (() =>
     {
 
     })()
@@ -259,8 +237,8 @@ const RedFlow = (() =>
     /* --------------------------------- execute -------------------------------- */
     /* -------------------------------------------------------------------------- */
 
-    log.credit()
-    log.success('Components Library', 'is running')
+    rf.log.credit()
+    rf.log.success('Components Library', 'is running')
 
     /* -------------------------------------------------------------------------- */
     /* ------------------------ Exposed RF API (Component) ---------------------- */
@@ -325,6 +303,3 @@ document.addEventListener('DOMContentLoaded', () =>
         M1.reload()
     })
 })
-
-
-// Salam Agha Danin
